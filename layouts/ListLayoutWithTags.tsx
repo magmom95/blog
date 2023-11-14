@@ -72,7 +72,6 @@ export default function ListLayoutWithTags({
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
-
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
 
   return (
@@ -127,7 +126,7 @@ export default function ListLayoutWithTags({
                   <li key={path} className="py-5">
                     <article className="flex flex-col space-y-2 xl:space-y-0">
                       <dl>
-                        <dt className="sr-only">Published on</dt>
+                        {/* <dt className="sr-only">Published on</dt> */}
                         <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
                           <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                         </dd>
