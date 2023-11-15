@@ -40,13 +40,12 @@ export default function blogPage() {
 <img
   src="https://storage.googleapis.com/static.fastcampus.co.kr/prod/uploads/202307/102502-1040/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EB%A1%9C%EB%93%9C%EB%A7%B5-%EA%B9%83%ED%97%88%EB%B8%8C.png"
   width="100%"
-  height="200"
+  height="500"
 />
 
 &uarr; [karanahmedse의 프론트엔드 로드맵](https://github.com/Han-Kyeol/developer-roadmap-kr-)
 
-개발자가 되기 이전에 개발자가 되려면 어떻게 해야하지? 에 대한 의문과 호기심을 갖고 검색을 하였을 때 한번 씩은 봤을 로드맵이다.  
-그러나 저 로드맵에 나온 기술을 모든 사람들이 다 알고 있을 수는 없다. (실제로 나도 1,2개 밖에...)  
+개발자가 되기 이전에 개발자가 되려면 어떻게 해야하지? 에 대한 의문과 호기심을 갖고 검색을 하였을 때 한번 씩은 봤을 로드맵이다. 그러나 저 로드맵에 나온 기술을 모든 사람들이 다 알고 있을 수는 없다. (실제로 나도 1,2개 밖에...)  
 여튼 김태곤 강사님도 이렇게 많은 범위에 공부를 하기 위해서는  
 **"넓게 배우고 필요한 것은 깊게 공부해라"** 라고 말씀 하셨고 이를 정리 하면
 
@@ -70,11 +69,9 @@ export default function blogPage() {
 
 - 룰을 지켜라! 합의되지 않은 건 쓰지도 마라. 회사에 있는 프로젝트는 개인 프로젝트가 아니다! 만약 새로운 기술 및 방법을 도입하고 싶다면 팀원들간의 협의 및 설득을 해야하고 그게 어렵다면 개인프로젝트를 통해 사용하는 것을 추천한다.
 
-- 회사는 결국엔 **돈을 주고 나의 능력과 경험을 구매한 것이다.** 심지어 새로운 기술 사용 했을 때 워낙 프로젝트 사이즈가 커서 어디의 영향이 가는지 파악을 못하여 `해피 패스`[^1]로 이슈를 놓지는 경우도 너무 많다. 그렇기에 회사는 보수적일 수 밖에 없다.
+- 회사는 결국엔 **돈을 주고 나의 능력과 경험을 구매한 것이다.** 심지어 새로운 기술 사용 했을 때 워낙 프로젝트가 크기 때문에 `해피패스`.[^1]로 인한 이슈를 잡지 못하는 경우가 너무 많다. 그렇기에 회사는 보수적일 수 밖에 없다.
 
-- 잘 아는 기술이면 블로그나 말로 설명해라! 내가 100% 이해를 했다면 블로그나 남에게 설명할 수 있어야 진정으로 이해한 것이라 본다. **짧고 정확하게 누구나 알수있게!!** 라는 마음을 갖자.
-
----
+- 잘 아는 기술이면 블로그나 말로 설명해라! 내가 100% 이해를 했다면 블로그나 남에게 설명할 수 있어야 진정으로 이해한 것이라 나는 생각 된다. **짧고 정확하게 누구나 알수있게!!**라는 마음가짐을 갖자.
 
 ## Back to the Basics : 프레임워크보다 기본기
 
@@ -220,9 +217,6 @@ Using the template? Support this effort by giving a star on GitHub, sharing your
 
 [MIT](https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/LICENSE) © [Timothy Lin](https://www.timrlx.com)
 
-[^1]:
-    `해피 패스`는 '아무것도 잘못되지 않는 사용자 시나리오'를 의미한다. 이는 사람의 실수, 엣지 케이스, 의도를 벗어난 행동을 포함하지 않기 때문에 이 시나리오 대로 테스트를 수행하면 이슈나 버그가 발생할 가능성이 현저히 낮아진다.  
-    예를 들어, 사용자 로그인을 다루는 행복한 경로 시나리오는 잘못된 입력, 네트워크 연결 문제, 서버 오류가 발생할 가능성을 무시하기 때문에 시나리오나 케이스를 벗어난 오류에서 이슈를 찾을 수 없다.
-
+[^1]: The previous version injects Preact into the production build. However, this is no longer possible as it does not support React Server Components. While overall bundle size has increased to about 85kB, most of the content can be pre-rendered on the server side, resulting in a low first contentful paint and time to interactive. Using React throughtout also leads to more consistent behavior with external libraries and components.
 [^2]: This is different from Next.js App Directory layouts and are best thought of as reusable React containers.
 [^3]: This takes advantage of Server Components by making it simple to specify the layout of choice in the markdown file and match against the `layouts` object which is then used to render the appropriate layout component.
