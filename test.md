@@ -29,23 +29,26 @@ export default function blogPage() {
 
 ```
 
+📌 강의에 나온 웹페이지 로드 과정 및 렌더링 엔진 동작 과정 자바스크립트 관련 된 내용은 다음 포스팅에 작성 할 예정
+
 ## 본 이야기에 들어가기 전에
 
 어쩌다 시간이 흘러 2년차 개발자가 된 지금  
-지금이라도 공부를 해야 겠다는 마음을 담아 블로그를 만들었습니다.  
-공부한 내용은 STUDY 에 정리 할 예정입니다.
+지금이라도 공부를 해야 겠다는 마음을 담아 블로그를 만들었으며  
+공부한 내용은 STUDY 에 정리 할 예정
 
 ## 정체되지 않는 프론트엔드 개발자의 일하는 방식
 
 <img
   src="https://storage.googleapis.com/static.fastcampus.co.kr/prod/uploads/202307/102502-1040/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EB%A1%9C%EB%93%9C%EB%A7%B5-%EA%B9%83%ED%97%88%EB%B8%8C.png"
   width="100%"
-  height="500"
+  height="300"
 />
 
 &uarr; [karanahmedse의 프론트엔드 로드맵](https://github.com/Han-Kyeol/developer-roadmap-kr-)
 
-개발자가 되기 이전에 개발자가 되려면 어떻게 해야하지? 에 대한 의문과 호기심을 갖고 검색을 하였을 때 한번 씩은 봤을 로드맵이다. 그러나 저 로드맵에 나온 기술을 모든 사람들이 다 알고 있을 수는 없다. (실제로 나도 1,2개 밖에...)  
+개발자가 되기 이전에 개발자가 되려면 어떻게 해야하지? 에 대한 의문과 호기심을 갖고 검색을 하였을 때 한번 씩은 봤을 로드맵이다.  
+그러나 저 로드맵에 나온 기술을 모든 사람들이 다 알고 있을 수는 없다. (실제로 나도 1,2개 밖에...)  
 여튼 김태곤 강사님도 이렇게 많은 범위에 공부를 하기 위해서는  
 **"넓게 배우고 필요한 것은 깊게 공부해라"** 라고 말씀 하셨고 이를 정리 하면
 
@@ -63,51 +66,65 @@ export default function blogPage() {
 
 #### ✨ 내 생각
 
-이 챕터를 들었을때 가장 공감을 많이 받은 것은
-
 - 코드를 많이 봐라. 아마 회사에 처음 입사를 하게 된다면 회사 코드를 많이 봐야 금방 적응을 할 수 있을 것 이며 나중에 왜 코드를 많이 보라하는지 이유를 알 게 될 것이다.
 
 - 룰을 지켜라! 합의되지 않은 건 쓰지도 마라. 회사에 있는 프로젝트는 개인 프로젝트가 아니다! 만약 새로운 기술 및 방법을 도입하고 싶다면 팀원들간의 협의 및 설득을 해야하고 그게 어렵다면 개인프로젝트를 통해 사용하는 것을 추천한다.
 
-- 회사는 결국엔 **돈을 주고 나의 능력과 경험을 구매한 것이다.** 심지어 새로운 기술 사용 했을 때 워낙 프로젝트가 크기 때문에 `해피패스`.[^1]로 인한 이슈를 잡지 못하는 경우가 너무 많다. 그렇기에 회사는 보수적일 수 밖에 없다.
+- 회사는 결국엔 **돈을 주고 나의 능력과 경험을 구매한 것이다.** 심지어 새로운 기술 사용 했을 때 워낙 프로젝트 사이즈가 커서 어디의 영향이 가는지 파악을 못하여 `해피 패스`[^1]로 이슈를 놓지는 경우도 너무 많다. 그렇기에 회사는 보수적일 수 밖에 없다.
 
-- 잘 아는 기술이면 블로그나 말로 설명해라! 내가 100% 이해를 했다면 블로그나 남에게 설명할 수 있어야 진정으로 이해한 것이라 나는 생각 된다. **짧고 정확하게 누구나 알수있게!!**라는 마음가짐을 갖자.
+- 잘 아는 기술이면 블로그나 말로 설명해라! 내가 100% 이해를 했다면 블로그나 남에게 설명할 수 있어야 진정으로 이해한 것이라 본다. **짧고 정확하게 누구나 알수있게!!** 라는 마음을 갖자.
 
 ## Back to the Basics : 프레임워크보다 기본기
 
-The codebase has been migrated to Typescript. While the previous version of the template was available in both Javascript and Typescript, I decided to reduce the maintenance burden and focus on Typescript. This also allows for better type checking and code completion in IDEs.
+**명확한 근거 : 모든 결정에는 구체적인 이유를 두자**
 
-Typescript is also a perfect match with our new type-safe markdown processor - Contentlayer.
+- 왜 그 기술을 사용했는지에 대하여 알고있어야 함
 
-## Contentlayer
+- 또한 코딩도 왜 이렇게 구조를 했는지에 대한 근거가 있어야함
 
-[Contentlayer](https://www.contentlayer.dev/) is a content SDK that validates and transforms your content into type-safe JSON data that you can easily import into your application. It makes working with local markdown or MDX files a breeze. This replaces `MDX-bundler` and our own markdown processing workflow.
+- 동작 과정 알면 좋다
 
-First, a content source is defined, specifiying the name of the document type, the source where it is located along with the frontmatter fields and any additional computed fields that should be generated as part of the process.
+#### ✨ 내 생각
 
-```ts:contentlayer.config.ts
-export const Blog = defineDocumentType(() => ({
-  name: 'Blog',
-  filePathPattern: 'blog/**/*.mdx',
-  contentType: 'mdx',
-  fields: {
-    title: { type: 'string', required: true },
-    date: { type: 'date', required: true },
-    tags: { type: 'list', of: { type: 'string' }, default: [] },
-    ...
-  },
-  computedFields: {
-    readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
-    slug: {
-      type: 'string',
-      resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
-    }
-    ...
-  },
-}))
-```
+- 강의에 나온 웹페이지 로드 과정 및 렌더링 엔진 동작 과정 자바스크립트 문법은 다음 포스팅에 작성 할 예정
 
-Contentlayer then processes the MDX files with our desired markdown remark or rehype plugins, validates the schema, generate type definitions and output json files that can be easily imported in our pages. Hot reloading comes out of the box, so edits to the markdown files will be reflected in the browser immediately!
+- 위에서 말했듯이 회사는 보수적 일 수 밖에 없는 구조이므로 모든 사항에 대해서는 논리적으로 말 할 수 있어야 함
+
+- 요즘에 ChatGPT가 코드도 짜주고 설계도 해주지만 ChatGPT보고 만들어줘 보단 자신의 코드를 보여줘서 보강을 하는것을 추천함  
+  **최소한 ChatGPT가 만들어 준 코드는 이해하고 써라**
+
+## 10년 이상 쓸 수 있는 지속 가능한 코드 작성
+
+##### 🚩 좋은 코드란 무엇일까?
+
+- 간결하고 이해되는 코드가 좋음 ( 주석다는 코드도 좋기는 하나 코드만 읽고도 이해 되는 코드를 만들어야 함)
+
+- 의존성이 적은 코드 ex) [leftpad](https://www.bloter.net/news/articleView.html?idxno=22900) [^2]
+
+- 하나의 함수, 클래스, 메소드는 명확한 하나의 책임만 지게 해야 함
+
+- 접속사 없이 하나의 문장으로 설명할 수 있는가?
+
+##### 🚩 디버깅
+
+- 정상 시스템의 동작, 기대하는 동작을 정의
+
+- 근본적인 원인을 알 때까지 충분한 데이터 수집. 증상이 아니라 원인을 해결
+
+- 시스템마다 미묘하게 다른 차이가 버그를 발생할 수 있다.  
+  ex) 웹 브라우저 환경의 차이, 안 좋은 인터넷 환경
+
+##### 🚩 리팩토링
+
+- 비슷한 작업을 세 번째 할 때 리팩토링을 해야 함
+
+- 리팩토링을 하면서 기능이 그대로 유지되지 않은 경우 이는 리팩토링이라고 볼 수 없음
+
+- 테스트가 없는 리팩토링은 끔찍 함
+
+#### ✨ 내 생각
+
+- 강의에 나온 웹페이지 로드 과정 및 렌더링 엔진 동작 과정 자바스크립트 문법은 다음 포스팅에 작성 할 예정
 
 ## Pliny
 
@@ -185,7 +202,7 @@ Inter is now replaced with Space Grotesk as the default font.
 
 ### New Layouts
 
-Layout components available in the `layouts` directory, provide a simple way to customize the look and feel of the blog.[^2]
+Layout components available in the `layouts` directory, provide a simple way to customize the look and feel of the blog.
 
 The downside of building a popular template is that you start seeing multiple similar sites everywhere 😆. While users are encouraged to customized the layouts to their liking, having more layout options that are easily switchable promotes diversity and perhaps can be a good starting point for further customizations.
 
@@ -217,6 +234,15 @@ Using the template? Support this effort by giving a star on GitHub, sharing your
 
 [MIT](https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/LICENSE) © [Timothy Lin](https://www.timrlx.com)
 
-[^1]: The previous version injects Preact into the production build. However, this is no longer possible as it does not support React Server Components. While overall bundle size has increased to about 85kB, most of the content can be pre-rendered on the server side, resulting in a low first contentful paint and time to interactive. Using React throughtout also leads to more consistent behavior with external libraries and components.
-[^2]: This is different from Next.js App Directory layouts and are best thought of as reusable React containers.
+[^1]:
+    `해피 패스`는 '아무것도 잘못되지 않는 사용자 시나리오'를 의미한다. 이는 사람의 실수, 엣지 케이스, 의도를 벗어난 행동을 포함하지 않기 때문에 이 시나리오 대로 테스트를 수행하면 이슈나 버그가 발생할 가능성이 현저히 낮아진다.  
+    예를 들어, 사용자 로그인을 다루는 행복한 경로 시나리오는 잘못된 입력, 네트워크 연결 문제, 서버 오류가 발생할 가능성을 무시하기 때문에 시나리오나 케이스를 벗어난 오류에서 이슈를 찾을 수 없다.
+
+[^2]:
+    <img
+    src="https://i2.ruliweb.com/img/20/08/21/174108cf3701255f9.jpeg"
+    width="100%"
+    height="300"
+    />
+
 [^3]: This takes advantage of Server Components by making it simple to specify the layout of choice in the markdown file and match against the `layouts` object which is then used to render the appropriate layout component.
