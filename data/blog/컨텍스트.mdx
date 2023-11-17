@@ -1,0 +1,120 @@
+---
+title: 자바스크립트 실행 컨텍스트
+date: '2023-11-17'
+tags: ['study']
+draft: false
+summary: 자바스크립트 실행 컨텍스트를 공부하여 정리한 글 입니다.
+---
+
+![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
+
+### ⚠ 참고 사항
+
+```javascript
+
+import { useState } from "react";
+
+export default function blogPage() {
+ const [블로그 내용, 내가 적은 내용] = useState('나의 주관적 생각 + 잘못 이해한 내용')
+  return (
+    <article>
+      {블로그 내용}
+      // 관련 된 내용을 내가 직접 공부하여 정리한 내용!!
+      // 주관적 생각과 나의 이해를 바탕으로 적은 글이라 정확하지 않을 수 있음
+      // 추후의 내용이 추가 되거나 수정 될 수 있음
+    </article>
+  );
+}
+
+```
+
+# 목차
+
+[1. 실행 컨텍스트](#실행-컨텍스트)
+
+[2. 실행 컨텍스트 스택](#실행-컨텍스트-스택)
+
+[3. 실행 컨텍스트 구성](#실행-컨텍스트-구성)
+
+[4. VariableEnvironment 와 LexicalEnvironment의 내부](#VariableEnvironment-와-LexicalEnvironment의-내부)
+
+[5. VariableEnvironment 와 LexicalEnvironment 차이점](#VariableEnvironment-와-LexicalEnvironment-차이점)
+
+[6. 추천 자료](#추천-자료)
+
+## 실행 컨텍스트
+
+- 자바스크립트 엔진은 코드 실행 전 실행 컨텍스트[^1]를 생성
+
+- 식별자[^2]와 스코프는 실행 컨텍스트의 렉시컬 환경으로 관리하고 코드 실행 순서는 실행 컨텍스트 스택으로 관리
+
+##### 🚩 실행 컨텍스트가 생성 되는 경우
+
+- 전역 공간[^3]에서 JS 코드가 처음으로 실행될 때
+
+- 함수 실행
+
+## 실행 컨텍스트 스택
+
+```javascript
+const x = 1 // 전역 컨텍스트 생성
+
+function foo() {
+  const y = 2
+
+  function bar() {
+    const z = 3
+    console.log(x + y + z)
+  }
+  bar() //bar 컨텍스트 생성
+}
+
+foo() // 합은 6
+```
+
+<img
+  src="https://velog.velcdn.com/images%2Fhang_kem_0531%2Fpost%2F04ca5128-ec9b-49f7-ada5-0a5513dc2e2b%2Fimage.png"
+  width="100%"
+  height="300"
+/>
+
+&uarr; 모던 자바스크립트 Deep Dive : 23장 실행 컨텍스트
+
+- 자바스크립트 엔진에서 전역 코드를 평가후 전역 실행 컨텍스트 생성
+
+- 함수가 호출되면 함수 코드를 평가하여 함수 실행 컨텍스트 생성
+
+- 이때 생성된 실행 컨텍스트는 스택 자료구조에서 관리
+
+## 실행 컨텍스트 구성
+
+- VariableEnvironment: 현재 컨텍스트 내의 식별자들에 대한 정보 + 외부 환경 정보
+
+- Lexical environment: 어휘적 환경 변수나 함수등의 식별자를 정의하는 명세
+
+- ThisBinding : this 식별자가 바라봐야 할 대상 객체
+
+## VariableEnvironment 와 LexicalEnvironment의 내부
+
+- Environment Record : 환경 레코드 식별자와 식별자에 This 바인딩된 값을 기록
+
+- Outer Environment Reference : 외부 환경 참조 (바깥 Lexical environment를 가리킴)
+
+## VariableEnvironment 와 LexicalEnvironment 차이점
+
+- VariableEnvironment 초기값이 undefined 이며 Function scope 단위
+
+- LexicalEnvironment 초기값이 할당 X이며 Block scope 단위
+
+##### 🚩실행 컨텍스트는 식별자 결정을 더욱 효율적으로 하기 위한 수단
+
+## 추천 자료
+
+자바스크립트 실행컨텍스트로 인하여 호이스팅, 클로저, 스코프 체인이 가능하게 되었으며 이에 관련하여는 아래 링크된 영상에서 자세히 설명 되었기 때문에 영상을 보기를 추천 함  
+📌[실행컨텍스트](https://www.youtube.com/watch?v=EWfujNzSUmw)  
+[클로저 & 스코프 체인](https://www.youtube.com/watch?v=MbYShFxp-j0)  
+[클로저 스코프](https://www.youtube.com/watch?v=RZ3gXcI1MZY&t=604s)
+
+[^1]: `실행 컨텍스트(Execution context)`란 자바스크립트 코드가 실행되는 환경. 실행 컨텍스트는 코드에서 참조하는 변수, 객체, this에 대한 참조를 담고 있으며 실행 컨텍스트 스택의 최상위에 존재
+[^2]: `식별자`란 어떤 대상을 유일하게 식별 및 구별할 수 있는 이름
+[^3]: `전역 공간`란 전역 최상위 객체를 말하며 NodeJS 환경에서는 Global, 브라우저 환경에서는 Window이다.
