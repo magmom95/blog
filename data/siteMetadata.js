@@ -2,13 +2,13 @@
 const siteMetadata = {
   title: 'Stamp',
   author: 'LEE',
-  headerTitle: 'Foot Stamp',
+  headerTitle: '개발자국',
   description: 'Slowly',
   language: 'ko-KR',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://magmom95.vercel.app',
   siteLogo: '/static/images/logo.png',
-  socialBanner: '/static/images/logo.png',
+  socialBanner: '/static/images/logo.png', // 썸네일
   email: 'magmom95@naver.com',
   github: 'https://github.com/magmom95',
   locale: 'ko-KR',

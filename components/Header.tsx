@@ -6,6 +6,8 @@ import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 
+const firstname = siteMetadata.headerTitle.slice(0, 2)
+const lastname = siteMetadata.headerTitle.slice(2)
 const Header = () => {
   return (
     <header className="flex items-center justify-between py-10">
@@ -16,8 +18,9 @@ const Header = () => {
               <Logo />
             </div>
             {typeof siteMetadata.headerTitle === 'string' ? (
-              <div className="hidden h-7 text-2xl font-semibold sm:block">
-                {siteMetadata.headerTitle}
+              <div className="my-auto flex hidden h-7 flex-col items-center text-sm font-semibold sm:block">
+                <div className="text-orange-500">{firstname}</div>
+                {lastname}
               </div>
             ) : (
               siteMetadata.headerTitle
