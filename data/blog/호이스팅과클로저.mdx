@@ -1,0 +1,70 @@
+---
+title: 호이스팅과 클로저
+date: '2023-11-19'
+tags: ['study']
+draft: false
+summary: 호이스팅과 클로저를 공부하여 정리한 글 입니다.
+---
+
+![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
+
+### ⚠ 참고 사항
+
+```javascript
+
+import { useState } from "react";
+
+export default function blogPage() {
+ const [블로그 내용, 내가 적은 내용] = useState('나의 주관적 생각 + 잘못 이해한 내용')
+  return (
+    <article>
+      {블로그 내용}
+      // 관련 된 내용을 내가 직접 공부하여 정리한 내용!!
+      // 주관적 생각과 나의 이해를 바탕으로 적은 글이라 정확하지 않을 수 있음
+      // 추후의 내용이 추가 되거나 수정 될 수 있음
+    </article>
+  );
+}
+
+```
+
+# 목차
+
+[1. 개요](#개요)
+
+[2. 호이스팅](#호이스팅)
+
+## 개요
+
+<img
+  src="https://velog.velcdn.com/images/seungchan__y/post/b33aa7ed-250a-4786-ace6-b092dc321338/image.png"
+  width="100%"
+  height="300"
+/>
+&uarr; [10분 테코톡 하루의 실행 컨텍스트](https://www.youtube.com/watch?v=EWfujNzSUmw)
+
+이전 포스팅을 통해 실행컨텍스트를 알아 보았고 실행컨텍스트 개념은 호이스팅,클로져,스코프 같은 개념을 이해하는데 매우 중요한 부분을 차지 함
+
+## 호이스팅
+
+실행컨텍스트에 Record[^1]로 인하여 호이스팅이 발생하게 됨
+
+```javascript
+console.log(이름) // undefined
+
+var 이름 = '이성규'
+
+console.log(이름) // 이성규
+```
+
+이러한 현상이 발생하게 되는 이유는 실행컨텍스트를 공부하면 이유를 알 수 있음
+
+- 실행컨텍스트를 구성 시 environment 에 식별자 정보 수집
+
+- 이로 인하여 해당 컨텍스트 내부는 변수명들을 이미 암
+
+**실행컨텍스트는 식별자를 관리 및 구분하는 용도** 이기 떄문
+
+##### 🚩 브라우저[^1]의 주요 기능
+
+[^1]: `Record`란 현재 컨텍스트와 관련된 식별자와 식별자에 바인딩된 값이 기록되는 공간
