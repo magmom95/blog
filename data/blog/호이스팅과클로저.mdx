@@ -1,6 +1,6 @@
 ---
 title: 호이스팅과 스코프,클로저 완전 정복
-date: '2023-11-19'
+date: '2023-11-21'
 tags: ['study']
 draft: false
 summary: 호이스팅과 스코프, 클로저를 공부하여 정리한 글 입니다.
@@ -42,7 +42,7 @@ export default function blogPage() {
 
 [6. 클로저](#클로저)
 
-[7. 리액트 관점](#리액트-관점)
+[7. 리액트 hook](#리액트-hook)
 
 ## 개요
 
@@ -221,7 +221,7 @@ function Calculator(a) {
   function result(c) {
     console.log(a, b, c) // result scope안에 있고 변수 c를 포함 우선순위 1
   }
-  result(b * 3) // c의 값에 대한 RHS가 있으므로 더이상 c를 찾아가지 않음 이러한 현상을 섀도잉이라 함
+  result(b * 3) // c의 값에 대한 RHS가 있으므로 더이상 c를 찾아가지 않음 이러한 현상을 섀도잉 현상이 발생 ( 동일한 식별자 선언으로 인해더 상위 스코프(=더 아래층)에서 선언된 식별자의 값이 가려지는 현상 )
 }
 
 Calculator(2) // 2, 4, 12
@@ -306,7 +306,63 @@ hi()
 
 - 이를 바탕으로 특정 값을 기억하여 일정 값만 바꿀 수 있게 끔 값을 부분적으로 변경 가능하게 됨
 
-## 리액트 관점
+## 리액트 hook
+
+```javascript
+const [state, setState] = useState('초깃값')
+```
+
+- useState는 [상태, 상태를 변경하는 함수] 형태의 배열 이며 이전 상태에 대한 정보를 가지고 있어야 하므로 클로저를 사용
+
+```javascript
+// node_modules/react/cjs/react.development.js 위치
+
+function useState(initialState) {
+  var dispatcher = resolveDispatcher() // initialState를 인자로 받는 함수를 선언
+  return dispatcher.useState(initialState)
+}
+```
+
+```javascript
+// resolveDispatcher 함수
+
+function resolveDispatcher() {
+  var dispatcher = ReactCurrentDispatcher.current // ReactCurrentDispatcher 안의 current 값을 리턴
+
+  {
+    if (dispatcher === null) {
+      error('생략')
+    }
+  }
+  return dispatcher
+}
+```
+
+```javascript
+var ReactCurrentDispatcher = {
+  /**
+   * @internal
+   * @type {ReactComponent}
+   */
+  current: null, // 이 current는 전역에서 선언된 것을 확인 할 수 있음
+}
+```
+
+- 즉 **useState의 리턴 값은 ReactCurrentDispatcher라는 전역 객체**
+
+- **함수형 컴포넌트도 결국 함수이므로 클로저를 통해 선언되는 시점에 접근 가능했던 외부 상태값에 계속 접근하여 이전 값을 얻을 수 있음**
+
+### 🏴 hook을 조건문 내에서 사용하면 안되는 이유?
+
+- hook을 조건문이나 일반 javascript 함수 안에서 사용하게 된다면, 저녁 current 가아닌 다른 값을 참조하기 때문에 에러가 발생 그러므로 **최상위(at the Top Level)에서만 Hook을 호출해야 함**
+
+## ✨다 이해하기 어렵기 때문에 관련된 내용을 계속 공부 하기를 추천 (이걸 초심자가 다 이해 할 수 가...)
+
+- [클로저 자료](https://youngju-js.tistory.com/39)
+
+- [클로저 강의 1](https://www.youtube.com/watch?v=MbYShFxp-j0)
+
+- [클로저 강의 2](https://www.youtube.com/watch?v=RZ3gXcI1MZY&t=604s)
 
 [^1]: `Record`란 현재 컨텍스트와 관련된 식별자와 식별자에 바인딩된 값이 기록되는 공간
 [^2]: `자바스크립트 엔진`란 자바스크립트 코드를 실행하는 프로그램을 말하며 주로 구글의 v8 엔진
