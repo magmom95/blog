@@ -354,7 +354,7 @@ var ReactCurrentDispatcher = {
 
 ### 🏴 hook을 조건문 내에서 사용하면 안되는 이유?
 
-- hook을 조건문이나 일반 javascript 함수 안에서 사용하게 된다면, 저녁 current 가아닌 다른 값을 참조하기 때문에 에러가 발생 그러므로 **최상위(at the Top Level)에서만 Hook을 호출해야 함**
+- hook을 조건문이나 일반 javascript 함수 안에서 사용하게 된다면, 전역 current 가 아닌 다른 값을 참조하기 때문에 에러가 발생 그러므로 **최상위(at the Top Level)에서만 Hook을 호출해야 함**
 
 ## ✨다 이해하기 어렵기 때문에 관련된 내용을 계속 공부 하기를 추천 (이걸 초심자가 다 이해 할 수 가...)
 
