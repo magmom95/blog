@@ -8,7 +8,7 @@ const siteMetadata = {
   theme: 'system', // system, dark or light
   siteUrl: 'https://magmom95.vercel.app',
   siteLogo: '/static/images/logo.png',
-  socialBanner: '/static/images/logo.png', // 썸네일
+  socialBanner: '/static/images/thumbNail.jpg', // 썸네일
   email: 'magmom95@naver.com',
   github: 'https://github.com/magmom95',
   locale: 'ko-KR',
