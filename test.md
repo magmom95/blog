@@ -1,9 +1,9 @@
 ---
-title: 호이스팅과 스코프,클로저 완전 정복
-date: '2023-11-19'
-tags: ['study']
+title: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프
+date: "2023-11-24"
+tags: ["study"]
 draft: false
-summary: 호이스팅과 스코프, 클로저를 공부하여 정리한 글 입니다.
+summary: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프를 공부하여 정리한 글 입니다.
 ---
 
 ![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
@@ -32,281 +32,26 @@ export default function blogPage() {
 
 [1. 개요](#개요)
 
-[2. 호이스팅](#호이스팅)
-
-[3. TDZ](#TDZ)
-
-[4. 스코프](#스코프)
-
-[5. 어휘적 스코프](#어휘적-스코프)
-
-[6. 클로저](#클로저)
-
-[7. React Hook](#React-Hook)
+[2. 자바스크립트 런타임](#자바스크립트-런타임)
 
 ## 개요
 
 <img
-  src="https://velog.velcdn.com/images/seungchan__y/post/b33aa7ed-250a-4786-ace6-b092dc321338/image.png"
+  src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
   width="100%"
   height="300"
 />
-&uarr; [10분 테코톡 하루의 실행 컨텍스트](https://www.youtube.com/watch?v=EWfujNzSUmw)
+&uarr; [렌더링 엔진](https://development-mark.vercel.app/blog/%EB%A0%8C%EB%8D%94%EB%A7%81%20%EC%97%94%EC%A7%84)
 
-이전 포스팅을 통해 실행컨텍스트를 알아 보았고 실행컨텍스트 개념은 호이스팅,클로져,스코프 같은 개념을 이해하는데 매우 중요한 부분을 차지 함
+예전 포스팅을 통해 알게 된 자바스크립트 엔진에 관련 된 내용을 좀더 깊게 다루기 위해
 
-## 호이스팅
+https://github.com/v8/v8
+https://evan-moon.github.io/2019/06/28/v8-analysis/
+https://medium.com/@vdongbin/node-js-%EB%8F%99%EC%9E%91%EC%9B%90%EB%A6%AC-single-thread-event-driven-non-blocking-i-o-event-loop-ce97e58a8e21
+https://hanamon.kr/javascript-%EB%9F%B0%ED%83%80%EC%9E%84-%EC%9E%91%EB%8F%99-%EB%B0%A9%EC%8B%9D-%EB%B9%84%EB%8F%99%EA%B8%B0%EC%99%80-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84/
+https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC
 
-실행컨텍스트에 Record[^1]로 인하여 호이스팅이 발생하게 됨
-
-### 🚩 실행컨텍스트 관점으로 본 호이스팅 발생 이유
-
-#### 📌 자바스크립트 엔진[^2] 실행 단계
-
-- 생성 단계
-
-  - 자바스크립트 엔진이 먼저 코드 전체를 스캔 한 후 실행컨텍스트를 구성 시 environment 에 식별자 정보 수집
-
-  - 이로 인하여 해당 컨텍스트 내부는 변수명들을 이미 암 (값 할당 x)
-
-  - 결론은 Reocrd의 경우 해당 컨텍스트 환경에 필요한 식별자와 식별자의 값이 기록이 됨 (var,let,const로 지정 된 변수명)
-
-    - **함수 실행 보다 Record 수집이 먼저 됨 (저장)**
-
-  - 변수와 같은 식별자를 끌어올리는 것과 같음 (식별자를 관리 및 구분하는 용도)
-
-- 실행 단계
-
-  - 코드를 순차적으로 실행 (Record를 참조하여 업데이트 하며 값을 할당)
-
-  - 순차적으로 변수에 대한 선언[^3], 초기화[^4], 할당[^5]이 이루어짐
-
-  💥 이러한 선언, 초기화, 할당시 TDZ가 발생하기 때문에 **근본적인 호이스팅 발생**
-
-## TDZ[^6]
-
-```javascript
-console.log(이름) // undefined
-
-var 이름 = '이성규'
-
-console.log(이름) // 이성규
-```
-
-```javascript
-console.log(이름) // error : ReferenceError
-
-const 이름 = '이성규'
-
-console.log(이름) // 이성규
-```
-
-이 둘의 차이는 변수의 라이프 사이클을 보면 쉽게 알 수 있다.
-
-<img
-  src="https://dmitripavlutin.com/static/112c5cd0c5bdd2897944d81c384a648f/9605b/2.jpg"
-  width="100%"
-  height="300"
-/>
-<img
-  src="https://dmitripavlutin.com/static/c707482b5c9368354684f45575d739d9/9605b/4.jpg"
-  width="100%"
-  height="300"
-/>  
-&uarr; [TDZ 자료](https://dmitripavlutin.com/variables-lifecycle-and-why-let-is-not-hoisted/)
-
-🌞 Var 키워드로 선언된 변수가 실행컨텍스트로 실행 하였을때 처음에는 선언문들만을 실행하여, Environment Record 만을 저장 함 (**\*Var는 선언과 초기화를 동시 진행하기 때문에 값을 undefined로 초기화를 함**) 이로 인하여 나머지 코드를 읽었을때 값을 할당 하지 않아도 undefined가 나옴 즉! **메모리를 차지하기위한 임의의 값 undefined가 return 값으로 나옴**
-
-🌝 Const or let 키워드로 선언된 변수느 Var와 달리 선언과 초기화가 따로 진행된다. 이때 TDZ가 발생하고 return 값을 했을때 변수값만 선언이 되었고 그에 따른 변수는 선언이 되었지만 이 변수가 차지할 메모리 출처가 지정 되지 않았기 때문에 ReferenceError가 발생
-
-### 🚩 함수 선언문, 함수 표현식도 호이스팅이 발생
-
-```javascript
-myName() // Uncaught TypeError: myName is not a function
-
-var myName = function () {
-  console.log('이성규다')
-}
-```
-
-```javascript
-myName() // Uncaught SyntaxError: Identifier 'myName' has already been declared
-
-const myName = function () {
-  console.log('이성규다')
-}
-```
-
-```javascript
-myName() // 호이스팅 됨
-
-function myName() {
-  console.log('이성규다')
-}
-```
-
-Context 생성 후 Record 내부에 myName라는 함수 객체를 생성 후 기록하고 함수 선언과 동시에 함수 객체를 생성하기 때문에 정상 동작을 함 (메모리 안의 함수 호출 선언 으로 인해 메모리 할당이 일어나기 때문)
-
-## 스코프[^7]
-
-#### 📌 스코프에 대한 이해가 있어야 클로저를 이해해야 함
-
-```javascript
-var 이름 = 'global 성규'
-
-function name() {
-  var 이름 = 'function 성규'
-  console.log(이름)
-}
-
-name() // (1)
-console.log(이름) // (2)
-```
-
-- 코드를 보다시피 **이름**을 중복 선언 하였다면 name 내부에 x는 어떠한 값을 참조해야할까?
-
-- 이러한 같은 식별자 이름의 충돌을 방지하기 위해 나온 것이 바로 스코프
-
-### 🚩 엔진을 통한 스코프 동작 과정
-
-```javascript
-function number(a) {
-  console.log(a) // 2
-}
-
-number(2)
-```
-
-- number에 대한 참조값이 필요함 이 과정에서 엔진은 함수로 판단
-
-- number라는 함수를 실행하기 위한 매개변수값에대한 참조를 요청 이로 인하여 a를 number에 인자로 판단
-
-- number안에 console에 대한 참조값이 필요 - 내장되있는것을 판단
-
-- 마지막으로 a의 값에 대한 참조값이 필요 - a의 2를 대입하여 log가 찍힘
-
-### 전문용어로 LHS[^10] 참조, RHS[^11] 참조 라고 함
-
-```javascript
-function sum(a) {
-  var b = a
-  return a + b
-}
-
-var c = sum(2)
-```
-
-### ⚠ RHS LHS 가 몇개일까 (연습!)
-
-- 선언되지 않은 변수라 하며, 중첩 스코프[^12] 안 어디서도 변수를 찾을 수 없다면 엔진은 **ReferenceError**가 발생하고
-
-- 변수나 함수인지 판단이 되지 않을때도 마찬가지로 **ReferenceError**가 발생
-
-- 변수나 함수인지 판단은 했으나 변수를 함수처럼 함수를 변수처럼 실행하는 등 이상한 판단을 하면 **TypeError** 가 발생
-
-### 🚩 스코프는 전역 스코프[^8], 지역 스코프[^9]로 나뉘어짐
-
-### 🏴 스코프의 특징은 function-level scope, 변수명 중복 허용, 암묵적 선언, Lexical scoping 로 나뉨
-
-## 어휘적 스코프
-
-- Lexical scope
-
-- 즉 **함수 및 변수를 참조하는 위치에 따라 변수에 값이 다름**
-
-```javascript
-function Calculator(a) {
-  // global 우선순위 3
-  var b = a * 2 // Calculator scope안에 있고 변수 a,result, b를 포함 우선순위 2
-  function result(c) {
-    console.log(a, b, c) // result scope안에 있고 변수 c를 포함 우선순위 1
-  }
-  result(b * 3) // c의 값에 대한 RHS가 있으므로 더이상 c를 찾아가지 않음 이러한 현상을 섀도잉이라 함
-}
-
-Calculator(2) // 2, 4, 12
-```
-
-- 함수호출은 중요하지않다 즉 **어디에 선언했는지에 따라 값이 달라 지는게 중요**
-
-```javascript
-var x = '이성규'
-
-function job() {
-  var x = '프론트 개발자'
-  name()
-}
-
-function name() {
-  console.log(x)
-}
-
-job() // 값은 무엇이 나올까
-name() // 둘다 같은값이 나오는 이유와 만약 job에 출력값을 프론트 개발자로 나오게 하는 방법은??
-```
-
-### 🚩 함수 스코프 vs 블록 스코프
-
-- JS는 기본적으로 함수 스코프 즉 새로운 함수가 생성 될 시 새로운 스코프가 발생
-
-```javascript
-// 함수 스코프
-if (true) {
-  //  if 문 loop문 등은 스코프로 간주 X 함수스코프만 스코프 취급
-  var name = '이성규'
-}
-console.log(name) // '이성규'
-
-function myName() {
-  // 함수 내에서 name 은 접근 가능하나 외부는 globalScope이므로 접근이 불가 ( 부모 -> 자식 X 그러나 자식 -> 부모 가능 )
-  var name = '이성규'
-}
-console.log(name) //ReferenceError
-```
-
-```javascript
-// 블록 스코프
-if (true) {
-  // const는 모든 {} 스코프로 취급
-  const name = '이성규'
-}
-console.log(name) //ReferenceError
-
-function myName() {
-  //블록안에서만 호출 가능
-  var name = '이성규'
-}
-name //ReferenceError
-```
-
-## 클로저
-
-- **함수가 속한 렉시컬 스코프를 기억하여 함수가 렉시컬 스코프 밖에서 실행될 때도 이 스코프에 접근할 수 있게 하는 기능** 이며 의도적으로 만드는게 아닌 저절로 발생
-
-```javascript
-function myName() {
-  const my = '나는'
-  const name = '이성규'
-  function result() {
-    // 여전히 result()에 의해 사용중 나중에 참조하기 위해 myname 스코프를 살림
-    console.log(my + '' + name)
-  }
-  return result // 즉 여전히 myname 참조를 기억 이를 클로저라함
-}
-
-const hi = myName() //myName이 실행되면서 내부 스코프가 사라진거같지만
-hi()
-```
-
-### 🏴 클로저의 활용
-
-- 정보 은닉 (접근 권한 제어) : 전역 변수를 사용x 클로저를 사용하여 외부에서 변수값의 간섭을 막을 수 있음
-
-- 커링 : 하나의 함수의 하나의 인자를 호출하게 끔 각각 독립적으로 실행시켜 함수의 재사용 및 유지 보수 측면 적으로 유용
-
-- 이를 바탕으로 특정 값을 기억하여 일정 값만 바꿀 수 있게 끔 값을 부분적으로 변경 가능하게 됨
-
-## React Hook
+## 자바스크립트 런타임
 
 [^1]: `Record`란 현재 컨텍스트와 관련된 식별자와 식별자에 바인딩된 값이 기록되는 공간
 [^2]: `자바스크립트 엔진`란 자바스크립트 코드를 실행하는 프로그램을 말하며 주로 구글의 v8 엔진
