@@ -1,7 +1,7 @@
 ---
-title: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프
-date: "2023-11-24"
-tags: ["study"]
+title: 자바스크립트 엔진 런타임 및 비동기 이벤트 루프
+date: '2023-11-24'
+tags: ['study']
 draft: false
 summary: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프를 공부하여 정리한 글 입니다.
 ---
@@ -43,13 +43,7 @@ export default function blogPage() {
 />
 &uarr; [렌더링 엔진](https://development-mark.vercel.app/blog/%EB%A0%8C%EB%8D%94%EB%A7%81%20%EC%97%94%EC%A7%84)
 
-예전 포스팅을 통해 알게 된 자바스크립트 엔진에 관련 된 내용을 좀더 깊게 다루기 위해
-
-https://github.com/v8/v8
-https://evan-moon.github.io/2019/06/28/v8-analysis/
-https://medium.com/@vdongbin/node-js-%EB%8F%99%EC%9E%91%EC%9B%90%EB%A6%AC-single-thread-event-driven-non-blocking-i-o-event-loop-ce97e58a8e21
-https://hanamon.kr/javascript-%EB%9F%B0%ED%83%80%EC%9E%84-%EC%9E%91%EB%8F%99-%EB%B0%A9%EC%8B%9D-%EB%B9%84%EB%8F%99%EA%B8%B0%EC%99%80-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84/
-https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC
+예전 포스팅을 통해 알게 된 자바스크립트 엔진에 관련 된 내용을 좀더 깊게 다룰 예정이며 그 중 V8엔진을 중점으로 포스팅 할 예정
 
 ## 자바스크립트 런타임
 
