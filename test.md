@@ -1,7 +1,7 @@
 ---
 title: 자바스크립트 엔진 런타임 작동 방식, 동작 원리
-date: '2023-11-24'
-tags: ['study']
+date: "2023-11-24"
+tags: ["study"]
 draft: false
 summary: 자바스크립트 엔진 런타임 작동 방식, 동작 원리를 공부하여 정리한 글 입니다.
 ---
@@ -49,12 +49,6 @@ export default function blogPage() {
 
 자바스크립트 엔진에 관련 된 내용을 좀더 깊게 다룰 예정 이며 그 중 Chrome의 V8엔진을 중심으로 포스팅 할 예정
 
-https://github.com/v8/v8
-https://evan-moon.github.io/2019/06/28/v8-analysis/
-https://medium.com/@vdongbin/node-js-%EB%8F%99%EC%9E%91%EC%9B%90%EB%A6%AC-single-thread-event-driven-non-blocking-i-o-event-loop-ce97e58a8e21
-https://hanamon.kr/javascript-%EB%9F%B0%ED%83%80%EC%9E%84-%EC%9E%91%EB%8F%99-%EB%B0%A9%EC%8B%9D-%EB%B9%84%EB%8F%99%EA%B8%B0%EC%99%80-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%A3%A8%ED%94%84/
-https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC
-
 ## 자바스크립트 런타임
 
 - JavaScript가 구동되는 환경
@@ -67,10 +61,53 @@ https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD
 
 - 즉 자바스크립트 엔진은 자바스크립트 코드를 컴퓨터가 이해할 수 있게 기계어로 변환해서 실행하는 프로그램 또는 인터프리터
 
+- 종류로는 V8, JavaScriptCore , Chakra 등이 있음
+
+## V8
+
+- V8 엔진은 Google이 개발한 오픈소스로 가장 대중적인 자바스크립트 엔진
+
+- Nodejs 런타임, Chrome Browser에서 사용
+
+- C++로 구성, 개발 (컴파일러)
+
+  ![Alt text](image-1.png)
+
+#### ✨V8을 더 이해하기 위한 필요한 지식
+
+- 자바스크립트는 싱글 스레드(single thread = 한 가닥)
+  <img
+    src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
+    width="100%"
+    height="300"
+  />
+
+  - 바늘 구멍에 실을 꿰는 것 처럼 한 가지 작업을 실행하기 위해 순차적으로 진행 시켜야 함 (실제로 코드를 실처럼 이어 놓았다고 해서 유래된 이름)
+
+  - 싱글 스레드란 하나의 프로그램에서 동시에 하나의 코드만 실행할 수 있다는 뜻
+
+#### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
+
+<img
+  src="public\static\images\자바스크립트 엔진.png"
+  width="100%"
+  height="300"
+/>
+
+- **콜 스택** : 코드 실행에 따라 호출 스택이 쌓이는 곳. 자바스크립트 엔진은 단 하나의 호출 스택을 사용
+
+- 메모리 힙 : 자바스크립트에서 사용되는 메모리 공간
+
+- 콜 스택은 코드를 읽고 함수가 실행되는 순서를 기억
+
+- 자바스크립트는 싱글 스레드 프로그래밍 언어이며 하나의 힙 영역과 하나의 콜 스택을 가지므로 한 가지 일 밖에 하지 못함
+
+- 콜 스택은 실행 컨텍스트 과정과 매우 유사
+
 #### 📌 자바스크립트 런타임에서 비동기 처리 방법
 
 <img
-  src="https://images.velog.io/images/y_jem/post/100640f7-b1dc-48ed-916a-b63959146b2f/jsengine.png"
+  src="public\static\images\자바스크립트 런타임.png"
   width="100%"
   height="300"
 />
@@ -87,54 +124,9 @@ https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD
 
 ✨이미지 처리나 애니메이션이 너무 잦아지거나 스택에 필요없이 느린 코드가 쌓이면 실행 속도의 영향이 감
 
-## V8
+### 그렇다면 Google은 V8 엔진을 만들었을까?
 
-- V8 엔진은 Google이 개발한 오픈소스로 가장 대중적인 자바스크립트 엔진
-
-- Nodejs 런타임, Chrome Browser에서 사용
-
-- C++로 구성, 개발 (컴파일러)
-
-### V8 엔진 구조
-
-- 자바스크립트 V8 엔진 소스 안에는 하나의 힙과 하나의 콜 스택
-
-- setTimeout, DOM, AJAX(HTTP 요청)등과 같은 비동기 메소드가 없음 -> 이를 도와주는 자바스크립트 런타임인 Web APIs(setTimeout, DOM, AJAX(HTTP 요청)) 와 이벤트 루프와 콜백 큐를 가짐
-
-#### ✨V8을 더 이해하기 위한 필요한 지식
-
-- 자바스크립트는 싱글 스레드(single thread = 한 가닥)
-  <img
-    src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
-    width="100%"
-    height="300"
-  />
-  - 바늘 구멍에 실을 꿰는 것 처럼 한 가지 작업을 실행하기 위해 순차적으로 진행 시켜야 함 (실제로 코드를 실처럼 이어 놓았다고 해서 유래된 이름)
-  - 싱글 스레드란 하나의 프로그램에서 동시에 하나의 코드만 실행할 수 있다는 뜻
-
-#### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
-
-<img
-  src="https://images.velog.io/images/y_jem/post/100640f7-b1dc-48ed-916a-b63959146b2f/jsengine.png"
-  width="100%"
-  height="300"
-/>
-
-- V8 엔진에는 두 가지 주요 구성 요소로 콜 스택과 메모리 힙이 존재
-
-- **콜 스택** : 코드 실행에 따라 호출 스택이 쌓이는 곳. 자바스크립트 엔진은 단 하나의 호출 스택을 사용
-
-- 메모리 힙 : 자바스크립트에서 사용되는 메모리 공간
-
-- 콜 스택은 코드를 읽고 함수가 실행되는 순서를 기억
-
-- 자바스크립트는 싱글 스레드 프로그래밍 언어이며 하나의 힙 영역과 하나의 콜 스택을 가지므로 한 가지 일 밖에 하지 못함
-
-- 콜 스택은 실행 컨텍스트 과정과 매우 유사
-
-### 그렇다면 Google은 자바스크립트 엔진 대신 V8 엔진을 만들었을까?
-
-- 그 이유를 알기 위해서는 컴파일러 와 인터프릿에 대한 이해가 필요 함
+- 그 이유를 알기 위해서는 컴파일러 와 인터프리터에 대한 이해가 필요 함
 
 #### 인터프리터(Interpreter) vs. 컴파일러(Compiler)
 
@@ -156,13 +148,80 @@ https://velog.io/@hang_kem_0531/JS-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD
 
 - 기존 자바스크립 엔진은 웹 특성상 유저와 상호작용을 위해 즉시성이 있는 인터프리터 방식을 사용하는데, 이는 코드가 많아질수록 속도가 느려진다는 단점이 있었음
 
-**인터프리터의 장점과 컴파일러의 장점을 합친 JIT Compiler을 지원(하이브리드 형식)하는 형식의 V8을 개발**
+- Google은 V8이라는 JavaScript와 웹 어셈블리(WebAssenbly)[^1] 엔진 프로그램 (인터프리터의 장점과 컴파일러의 장점을 합친 JIT Compiler을 지원) 을 개발
 
-- 이로 인하여 자바스크립트의 성능을 크게 향상 시킴
+  - 웹 애플리케이션 개발시에는 JavaScript 프로그래밍 언어를 사용해 동적인 부분을 개발하는데 C나 C++언어들에 비해서는 느리므로 C나 C++과 같은 언어로 개발할 수 있게 하는 것 (게임 같은 고성능 웹 애플리케이션)
+
+  - 초기에 웹상에서 코드를 빠르게 실행하기 위한 목적으로 설계되었지만 재는 브라우저 외에 다양한 환경에서 실행될 수 있습니다. 그리고 웹어셈블리는 어셈블리라고 볼 수 없음 (이름이 잘못 지어짐)
+
+  - 즉 고성능 웹 애플리케이션 개발 시 JavaScript와 같이 사용되고 **JavaScript를 대체하는 것이 아닌 보완하는 기술**
+
+- V8은 V8 API를 사용하여 JavaScript 객체를 만들고 조작하며, JavaScript 함수를 호출하고 C++에서 JavaScript와 상호 작용할 수 있는 다양한 기능을 제공
+
+```C++
+
+#include <iostream>
+#include <libplatform/libplatform.h>
+#include <v8.h>
+
+int main(int argc, char* argv[]) {
+  // V8 초기화
+  v8::V8::InitializeICUDefaultLocation(argv[0]);
+  v8::V8::InitializeExternalStartupData(argv[0]);
+  std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
+  v8::V8::InitializePlatform(platform.get());
+  v8::V8::Initialize();
+
+  // V8 컨텍스트 생성
+  v8::Isolate::CreateParams create_params;
+  v8::Isolate* isolate = v8::Isolate::New(create_params);
+
+  {
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    // JavaScript 코드 작성
+    const char* js_code = "print('Hello, V8!');";
+
+    // 컨텍스트 생성
+    v8::Local<v8::Context> context = v8::Context::New(isolate);
+    v8::Context::Scope context_scope(context);
+
+    // JavaScript 코드 실행
+    v8::Local<v8::String> source =
+        v8::String::NewFromUtf8(isolate, js_code,
+                                v8::NewStringType::kNormal)
+            .ToLocalChecked();
+    v8::Local<v8::Script> script =
+        v8::Script::Compile(context, source).ToLocalChecked();
+    v8::Local<v8::Value> result = script->Run(context).ToLocalChecked();
+
+    // 결과 출력
+    v8::String::Utf8Value utf8(isolate, result);
+    std::cout << "Result: " << *utf8 << std::endl;
+  }
+
+  // V8 정리
+  isolate->Dispose();
+  v8::V8::Dispose();
+  v8::V8::ShutdownPlatform();
+
+  return 0;
+}
+
+```
+
+- 자세한 내용은 [V8 GitHub 저장소](https://github.com/v8/v8)를 보면 됨
 
 ## V8 엔진의 작동원리
 
-[^1]: `인터프리터`란 자바스크립트 파일을 입력받으면 코드를 한 줄 한 줄 해석하면서 기계어로 번역하는 방식
+<img
+  src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*ISypeZUo6NggTMff.png"
+  width="100%"
+  height="300"
+/>
+
+[^1]: `웹어셈블리`란 C나 C++와 같은 프로그래밍 언어를 컴파일해서 어느 브라우저에서나 빠르게 실행되는 형식으로 바꿔주는 기술
 [^2]: `자바스크립트 엔진`란 자바스크립트 코드를 실행하는 프로그램을 말하며 주로 구글의 v8 엔진
 [^3]: `선언`란 메모리 공간을 확보하고 식별자와 연결 즉 정체를 알리는 행위
 [^4]: `초기화`란 별자에 암묵적으로 undefined 값으로 바인딩하는 것 즉 공간을 확보해서 거기에 undefined라는 임의의에 값을 넣는 행위
