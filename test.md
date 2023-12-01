@@ -1,9 +1,9 @@
 ---
 title: 자바스크립트 엔진 런타임 작동 방식, 동작 원리
-date: '2023-11-24'
+date: '2023-11-30'
 tags: ['study']
 draft: false
-summary: 자바스크립트 엔진 런타임 작동 방식, 동작 원리를 공부하여 정리한 글 입니다.
+summary: 자바스크립트 엔진 작동 방식, 동작 원리를 공부하여 정리한 글 입니다.
 ---
 
 ![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
@@ -37,6 +37,10 @@ export default function blogPage() {
 [3. 자바스크립트 엔진](#자바스크립트-엔진)
 
 [4. V8](#V8)
+
+[5. V8 엔진의 작동원리](#V8-엔진의-작동원리)
+
+[6. 결론](#결론)
 
 ## 개요
 
@@ -73,58 +77,15 @@ export default function blogPage() {
 
   ![Alt text](image-1.png)
 
-#### ✨V8을 더 이해하기 위한 필요한 지식
-
-- 자바스크립트는 싱글 스레드(single thread = 한 가닥)
-  <img
-    src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
-    width="100%"
-    height="300"
-  />
-
-  - 바늘 구멍에 실을 꿰는 것 처럼 한 가지 작업을 실행하기 위해 순차적으로 진행 시켜야 함 (실제로 코드를 실처럼 이어 놓았다고 해서 유래된 이름)
-
-  - 싱글 스레드란 하나의 프로그램에서 동시에 하나의 코드만 실행할 수 있다는 뜻
-
-#### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
-
-<img
-  src="public\static\images\자바스크립트 엔진.png"
-  width="100%"
-  height="300"
-/>
-
-- **콜 스택** : 코드 실행에 따라 호출 스택이 쌓이는 곳. 자바스크립트 엔진은 단 하나의 호출 스택을 사용
-
-- 메모리 힙 : 자바스크립트에서 사용되는 메모리 공간
-
-- 콜 스택은 코드를 읽고 함수가 실행되는 순서를 기억
-
-- 자바스크립트는 싱글 스레드 프로그래밍 언어이며 하나의 힙 영역과 하나의 콜 스택을 가지므로 한 가지 일 밖에 하지 못함
-
-- 콜 스택은 실행 컨텍스트 과정과 매우 유사
-
-#### 📌 자바스크립트 런타임에서 비동기 처리 방법
-
-<img
-  src="public\static\images\자바스크립트 런타임.png"
-  width="100%"
-  height="300"
-/>
-
-- 이벤트 루프는 이 전체 시스템에서 아주 단순한 일을 하는 작은 파트 (그러나 매우 중요)
-
-- 이벤트 루프의 역할은 콜 스택과 콜백 큐를 주시
-
-- 콜 스택이 비어있으면 큐의 첫 번째 콜백을 스택에 쌓아 효과적으로 실행할 수 있게 함
-
-- 이벤트 루프는 콜 스택이 비어질 때까지 기다린 후 콜백 큐에 있는 콜백을 콜 스택에 넣어주는 역할 (싱글 스레드)
-
-- Web API의 콜백이 완료되었다면 콜백은 큐에 쌓이게 되고, 이벤트 루프에 의해서 실행
-
-✨이미지 처리나 애니메이션이 너무 잦아지거나 스택에 필요없이 느린 코드가 쌓이면 실행 속도의 영향이 감
-
 ### 그렇다면 Google은 V8 엔진을 만들었을까?
+
+<img
+  src="https://velog.velcdn.com/images/seungchan__y/post/7e873760-fc6f-4522-8cbc-619f1082afe4/image.avif"
+  width="100%"
+  height="300"
+/>
+
+&uarr; 기존 자바스크립트 엔진 처리 과정은 문제가 많았음
 
 - 그 이유를 알기 위해서는 컴파일러 와 인터프리터에 대한 이해가 필요 함
 
@@ -148,11 +109,11 @@ export default function blogPage() {
 
 - 기존 자바스크립 엔진은 웹 특성상 유저와 상호작용을 위해 즉시성이 있는 인터프리터 방식을 사용하는데, 이는 코드가 많아질수록 속도가 느려진다는 단점이 있었음
 
-- Google은 V8이라는 JavaScript와 웹 어셈블리(WebAssenbly)[^1] 엔진 프로그램 (인터프리터의 장점과 컴파일러의 장점을 합친 JIT Compiler을 지원) 을 개발
+- Google은 V8이라는 JavaScript와 웹 어셈블리(WebAssenbly)[^1] 엔진 프로그램 (인터프리터의 장점과 컴파일러의 장점을 합친 JIT Compiler을 지원하여 기계어로 변환 시켜 줌) 을 개발
 
   - 웹 애플리케이션 개발시에는 JavaScript 프로그래밍 언어를 사용해 동적인 부분을 개발하는데 C나 C++언어들에 비해서는 느리므로 C나 C++과 같은 언어로 개발할 수 있게 하는 것 (게임 같은 고성능 웹 애플리케이션)
 
-  - 초기에 웹상에서 코드를 빠르게 실행하기 위한 목적으로 설계되었지만 재는 브라우저 외에 다양한 환경에서 실행될 수 있습니다. 그리고 웹어셈블리는 어셈블리라고 볼 수 없음 (이름이 잘못 지어짐)
+  - 초기에 웹상에서 코드를 빠르게 실행하기 위한 목적으로 설계되었지만 브라우저 외에 다양한 환경에서 실행될 수 있으며 웹어셈블리는 어셈블리(수준 낮은 언어)라고 볼 수 없음 (초기에는 코드를 빠르게 실행하기 위한 목적으로 설계했지만 지금은 다양한 환경에서 실행 될 수 있게 설계 됨)
 
   - 즉 고성능 웹 애플리케이션 개발 시 JavaScript와 같이 사용되고 **JavaScript를 대체하는 것이 아닌 보완하는 기술**
 
@@ -216,29 +177,76 @@ int main(int argc, char* argv[]) {
 ## V8 엔진의 작동원리
 
 <img
-  src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fy2Am1%2FbtqxNVMzdwl%2F4Jd5tVGPDWlRriCBk0QHzK%2Fimg.png"
+  src="public\static\images\V8엔진 구조.png"
   width="100%"
   height="300"
 />
 
--
+&uarr; Franziska Hinkelmann 가 JSConf EU 2017에서 발표한 내용
 
-<!-- <img
-  src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*ISypeZUo6NggTMff.png"
-  width="100%"
-  height="300"
-/>
+- Parser : 문장의 구조를 알아내는 구문 분석을 행하는 프로그램으로 낱말 분석(Lexical Analysis) 이라는 과정을 통해 코드를 토큰으로 분해
+
+  ```javascript
+  const name = '이성규'
+  /// ['const', 'name', '=', '이성규']
+  ```
+
+- AST : Abstract Syntax Tree(추상 구문 트리)의 약자로 Parser에서 분해 한 토큰을 바탕으로 tree를 생성 (Dom tree 구성되는 것과 비슷 함)
+
+  - ex) [AST](https://github.com/v8/v8)
+
+- Ignition Interpreter : **V8 엔진의 주요한 2개의 부분 중 하나** 으로 모든 소스를 한번에 해석하는 컴파일 방식이 아닌 코드 한줄 한줄이 실행될 때마다 해석하는 인터프리트 방식을 채택하여 개발
+
+  - 메모리 사용량 감소, 파싱 시 오버헤드 감소, 파일 파이프 라인의 복잡성 감소함
+
+  - 코드를 처음 실행할 때만 동작(주된 목적인 메모리 사용량 감소 목적)
+
+  - 즉 **Ignition은 코드가 한줄한줄 실행될 때마다 코드를 바이트 코드[^2]로 바꿔주는 역할**
+
+- TurboFan Compiler : **V8 엔진의 마지막 주요 부분** 으로 바이트 코드로 실제로 작동하는 코드 중에 자주 사용되는 코드를 TurboFan으로 보내져서 Optimized Machine Code (최적화)를 시켜 다시 컴파일 시킴
+
+  - Hot spot (반복되어 사용하는 코드나 호출되는 것) 과열 지점을 찾고 기계어로 변환시켜 최적화 시킴
+
+  - 이때 최적화 방법은 히든 클래스(Hidden Class)나 인라인 캐싱(Inline Caching) 등 여러가지 기법이 있다는데 추후의 공부 할 예정...
+
+  - 최적화 된 코드를 Optimized code가 실행 **만약 사용이 덜 되게 된다면 최적화를 해제하여 바이트 코드로 실행(Deoptimizing)**
+
+  ```C++
+    // v8/src/execution/rumtime-profiler.cc (GPT 가 알려준 예시)
+    OptimizationReason RuntimeProfiler::ShouldOptimize(JSFunction function, BytecodeArray bytecode) {
+    int ticks = function.feedback_vector().profiler_ticks();
+    int ticks_for_optimization = kProfilerTicksBeforeOptimization +
+                                (bytecode.length() / kBytecodeSizeAllowancePerTick);
+
+    if (ticks >= ticks_for_optimization) {
+      // 함수가 호출된 횟수가 임계 틱 수를 초과하면 최적화를 수행
+      return OptimizationReason::kHotAndStable;
+    } else if (!any_ic_changed_ && bytecode.length() < kMaxBytecodeSizeForEarlyOpt) {
+      // 인라인 캐싱이 변경되지 않았고, 바이트 코드의 길이가 작다면 최적화 수행
+      return OptimizationReason::kSmallFunction;
+    }
+
+    // 해당 사항 없으면 최적화를 수행하지 않음
+    return OptimizationReason::kDoNotOptimize;
+    }
+  ```
+
+  - 이 과정이 어렵다면 자동차를 예시로 생각하면 될듯
+    - V8엔진 (8기통) -> Ignition(점화기=시동거는거) -> Turbo(냉각기=열식혀주는놈)
+
+## 결론
+
+- 마지막으로 전체 자바스크립트 런타임이 동작하는 것은 사진 과 같음
 
 <img
-  src="https://blog.kakaocdn.net/dn/Mzydy/btrat3GhRCd/pmqS86WZh993KkhCs2sft1/img.png"
+  src="https://velog.velcdn.com/images%2Fchoijw1116%2Fpost%2Fcec958c0-57ba-48f4-bcc7-a12f9efa1e08%2Fjavascript_runtime.png"
   width="100%"
   height="300"
 />
 
-<img
-  src="public\static\images\런타임.png"
-  width="100%"
-  height="300"
-/> -->
+- 자바스크립트 런타임의 비동기 처리 및 콜 스택 이벤트루프 블로킹 논블로킹에 대해서 포스팅 할 예정
 
-[^1]: `웹어셈블리`란 C나 C++와 같은 프로그래밍 언어를 컴파일해서 어느 브라우저에서나 빠르게 실행되는 형식으로 바꿔주는 기술
+- 자바스크립트는 그렇다면 Interperter 인가? Compiler 인가? 생각 해 보기
+
+[^1]: `웹 어셈블리`란 브라우저에서 실행할 수 있는 이진 형식의 프로그래밍 언어로서 주로 웹 애플리케이션에서 높은 성능이 필요한 부분을 위해 설계되었으며, JavaScript 외에 다양한 언어로 작성된 코드를 효과적으로 실행할 수 있도록 설계 됨
+[^2]: `바이트 코드`란 고급 언어로 작성된 소스 코드를 가상머신이 한결 편하게 이해할 수 있도록 중간 코드로 한번 컴파일하여가상 머신이 이해 할 수 있는 0과 1로 구성된 이진 코드

@@ -1,9 +1,9 @@
 ---
-title: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프
-date: '2023-11-24'
+title: 자바스크립트 엔진 런타임 작동 방식, 동작 원리
+date: '2023-11-30'
 tags: ['study']
 draft: false
-summary: 자바스크립트 엔진 런타임 작동 방식, 비동기 이벤트 루프를 공부하여 정리한 글 입니다.
+summary: 자바스크립트 엔진 작동 방식, 동작 원리를 공부하여 정리한 글 입니다.
 ---
 
 ![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
@@ -30,11 +30,19 @@ export default function blogPage() {
 
 # 목차
 
-[1. 그렇다면 Google은 자바스크립트 엔진 대신 V8 엔진을 채택 했을까?](#그렇다면-Google은-자바스크립트-엔진-대신-V8-엔진을-채택-했을까)
+[1. 개요](#개요)
 
 [2. 자바스크립트 런타임](#자바스크립트-런타임)
 
-## 그렇다면 Google은 자바스크립트 엔진 대신 V8 엔진을 채택 했을까?
+[3. 자바스크립트 엔진](#자바스크립트-엔진)
+
+[4. V8](#v8)
+
+[5. V8 엔진의 작동원리](#v8-엔진의-작동원리)
+
+[6. 결론](#결론)
+
+## 개요
 
 <img
   src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
@@ -43,11 +51,198 @@ export default function blogPage() {
 />
 &uarr; [렌더링 엔진](https://development-mark.vercel.app/blog/%EB%A0%8C%EB%8D%94%EB%A7%81%20%EC%97%94%EC%A7%84)
 
-예전 포스팅을 통해 알게 된 자바스크립트 엔진을 공부 한 내용을 포스팅 할 예정
+자바스크립트 엔진에 관련 된 내용을 좀더 깊게 다룰 예정 이며 그 중 Chrome의 V8엔진을 중심으로 포스팅 할 예정
 
 ## 자바스크립트 런타임
 
-[^1]: `Record`란 현재 컨텍스트와 관련된 식별자와 식별자에 바인딩된 값이 기록되는 공간
-[^2]: `자바스크립트 엔진`란 자바스크립트 코드를 실행하는 프로그램을 말하며 주로 구글의 v8 엔진
-[^3]: `선언`란 메모리 공간을 확보하고 식별자와 연결 즉 정체를 알리는 행위
-[^4]: `초기화`란 별자에 암묵적으로 undefined 값으로 바인딩하는 것 즉 공간을 확보해서 거기에 undefined라는 임의의에 값을 넣는 행위
+- JavaScript가 구동되는 환경
+
+- 종류로는 웹 브라우저(크롬, 파이어폭스) 와 NodeJs라는 프로그램이 존재 함
+
+## 자바스크립트 엔진
+
+- 기본적으로 컴퓨터는 0 or 1 밖에 이해하지 못하는 낮은 수준의 언어지만 자바스크립트 파일을 이해하고 명령을 수행하기 위해 등장
+
+- 즉 자바스크립트 엔진은 자바스크립트 코드를 컴퓨터가 이해할 수 있게 기계어로 변환해서 실행하는 프로그램 또는 인터프리터
+
+- 종류로는 V8, JavaScriptCore , Chakra 등이 있음
+
+## V8
+
+- V8 엔진은 Google이 개발한 오픈소스로 가장 대중적인 자바스크립트 엔진
+
+- Nodejs 런타임, Chrome Browser에서 사용
+
+- C++로 구성, 개발 (컴파일러)
+
+  <img src="/static/images/c++.png" />
+
+### 그렇다면 Google은 V8 엔진을 만들었을까?
+
+<img
+  src="https://velog.velcdn.com/images/seungchan__y/post/7e873760-fc6f-4522-8cbc-619f1082afe4/image.avif"
+  width="100%"
+  height="300"
+/>
+
+&uarr; 기존 자바스크립트 엔진 처리 과정은 문제가 많았음
+
+- 그 이유를 알기 위해서는 컴파일러 와 인터프리터에 대한 이해가 필요 함
+
+#### 인터프리터(Interpreter) vs. 컴파일러(Compiler)
+
+- 인터프리터
+
+  - Interpret 라는 단어는 "해석하다"라는 뜻으로 **프로그램 실행시 한 번에 한 문장씩만 기계어로 번역**
+
+  - 컴파일러와 다르게 한번에 한 문장씩 읽고 번역하여 실행시키는 과정을 반복하다보니 실행이 조금 느리지만 메모리 효율이 좋음
+
+  - 한번에 한 문장씩 읽기때문에 프로그램을 실행해봐야지만 오류 발견이 가능하지만 코드 변경시 빌드 과정없이 바로 실행이 가능 하므로 개발 속도가 빠르다는 장점이 있음
+
+- 컴파일러
+
+  - Compile 이라는 단어는 "무언가를 모아서 묶음으로 만든다" 라는 뜻으로 **프로그램 전체를 스캔하여 이를 모두 기계어로 한번에 번역**
+
+  - 모든 파일을 스캔하기 때문에 초기 스캔시간이 오래걸리지만 인터프리터보다 속도가 빠름
+
+  - 인터프리터 보다 메모리를 많이 사용하지만 전체 코드를 검사한 후에 실행 하기 때문에 실행 전 오류 발견 가능
+
+- 기존 자바스크립 엔진은 웹 특성상 유저와 상호작용을 위해 즉시성이 있는 인터프리터 방식을 사용하는데, 이는 코드가 많아질수록 속도가 느려진다는 단점이 있었음
+
+- Google은 V8이라는 JavaScript와 웹 어셈블리(WebAssenbly)[^1] 엔진 프로그램 (인터프리터의 장점과 컴파일러의 장점을 합친 JIT Compiler을 지원하여 기계어로 변환 시켜 줌) 을 개발
+
+  - 웹 애플리케이션 개발시에는 JavaScript 프로그래밍 언어를 사용해 동적인 부분을 개발하는데 C나 C++언어들에 비해서는 느리므로 C나 C++과 같은 언어로 개발할 수 있게 하는 것 (게임 같은 고성능 웹 애플리케이션)
+
+  - 초기에 웹상에서 코드를 빠르게 실행하기 위한 목적으로 설계되었지만 브라우저 외에 다양한 환경에서 실행될 수 있으며 웹어셈블리는 어셈블리(수준 낮은 언어)라고 볼 수 없음 (초기에는 코드를 빠르게 실행하기 위한 목적으로 설계했지만 지금은 다양한 환경에서 실행 될 수 있게 설계 됨)
+
+  - 즉 고성능 웹 애플리케이션 개발 시 JavaScript와 같이 사용되고 **JavaScript를 대체하는 것이 아닌 보완하는 기술**
+
+- V8은 V8 API를 사용하여 JavaScript 객체를 만들고 조작하며, JavaScript 함수를 호출하고 C++에서 JavaScript와 상호 작용할 수 있는 다양한 기능을 제공
+
+```C++
+
+#include <iostream>
+#include <libplatform/libplatform.h>
+#include <v8.h>
+
+int main(int argc, char* argv[]) {
+  // V8 초기화
+  v8::V8::InitializeICUDefaultLocation(argv[0]);
+  v8::V8::InitializeExternalStartupData(argv[0]);
+  std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
+  v8::V8::InitializePlatform(platform.get());
+  v8::V8::Initialize();
+
+  // V8 컨텍스트 생성
+  v8::Isolate::CreateParams create_params;
+  v8::Isolate* isolate = v8::Isolate::New(create_params);
+
+  {
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+
+    // JavaScript 코드 작성
+    const char* js_code = "print('Hello, V8!');";
+
+    // 컨텍스트 생성
+    v8::Local<v8::Context> context = v8::Context::New(isolate);
+    v8::Context::Scope context_scope(context);
+
+    // JavaScript 코드 실행
+    v8::Local<v8::String> source =
+        v8::String::NewFromUtf8(isolate, js_code,
+                                v8::NewStringType::kNormal)
+            .ToLocalChecked();
+    v8::Local<v8::Script> script =
+        v8::Script::Compile(context, source).ToLocalChecked();
+    v8::Local<v8::Value> result = script->Run(context).ToLocalChecked();
+
+    // 결과 출력
+    v8::String::Utf8Value utf8(isolate, result);
+    std::cout << "Result: " << *utf8 << std::endl;
+  }
+
+  // V8 정리
+  isolate->Dispose();
+  v8::V8::Dispose();
+  v8::V8::ShutdownPlatform();
+
+  return 0;
+}
+
+```
+
+- 자세한 내용은 [V8 GitHub 저장소](https://github.com/v8/v8)를 보면 됨
+
+## V8 엔진의 작동원리
+
+<img src="/static/images/V8엔진 구조.png" />
+
+&uarr; Franziska Hinkelmann 가 JSConf EU 2017에서 발표한 내용
+
+- Parser : 문장의 구조를 알아내는 구문 분석을 행하는 프로그램으로 낱말 분석(Lexical Analysis) 이라는 과정을 통해 코드를 토큰으로 분해
+
+  ```javascript
+  const name = '이성규'
+  /// ['const', 'name', '=', '이성규']
+  ```
+
+- AST : Abstract Syntax Tree(추상 구문 트리)의 약자로 Parser에서 분해 한 토큰을 바탕으로 tree를 생성 (Dom tree 구성되는 것과 비슷 함)
+
+  - ex) [AST](https://github.com/v8/v8)
+
+- Ignition Interpreter : **V8 엔진의 주요한 2개의 부분 중 하나** 으로 모든 소스를 한번에 해석하는 컴파일 방식이 아닌 코드 한줄 한줄이 실행될 때마다 해석하는 인터프리트 방식을 채택하여 개발
+
+  - 메모리 사용량 감소, 파싱 시 오버헤드 감소, 파일 파이프 라인의 복잡성 감소함
+
+  - 코드를 처음 실행할 때만 동작(주된 목적인 메모리 사용량 감소 목적)
+
+  - 즉 **Ignition은 코드가 한줄한줄 실행될 때마다 코드를 바이트 코드[^2]로 바꿔주는 역할**
+
+- TurboFan Compiler : **V8 엔진의 마지막 주요 부분** 으로 바이트 코드로 실제로 작동하는 코드 중에 자주 사용되는 코드를 TurboFan으로 보내져서 Optimized Machine Code (최적화)를 시켜 다시 컴파일 시킴
+
+  - Hot spot (반복되어 사용하는 코드나 호출되는 것) 과열 지점을 찾고 기계어로 변환시켜 최적화 시킴
+
+  - 이때 최적화 방법은 히든 클래스(Hidden Class)나 인라인 캐싱(Inline Caching) 등 여러가지 기법이 있다는데 추후의 공부 할 예정...
+
+  - 최적화 된 코드를 Optimized code가 실행 **만약 사용이 덜 되게 된다면 최적화를 해제하여 바이트 코드로 실행(Deoptimizing)**
+
+  ```C++
+    // v8/src/execution/rumtime-profiler.cc (GPT 가 알려준 예시)
+    OptimizationReason RuntimeProfiler::ShouldOptimize(JSFunction function, BytecodeArray bytecode) {
+    int ticks = function.feedback_vector().profiler_ticks();
+    int ticks_for_optimization = kProfilerTicksBeforeOptimization +
+                                (bytecode.length() / kBytecodeSizeAllowancePerTick);
+
+    if (ticks >= ticks_for_optimization) {
+      // 함수가 호출된 횟수가 임계 틱 수를 초과하면 최적화를 수행
+      return OptimizationReason::kHotAndStable;
+    } else if (!any_ic_changed_ && bytecode.length() < kMaxBytecodeSizeForEarlyOpt) {
+      // 인라인 캐싱이 변경되지 않았고, 바이트 코드의 길이가 작다면 최적화 수행
+      return OptimizationReason::kSmallFunction;
+    }
+
+    // 해당 사항 없으면 최적화를 수행하지 않음
+    return OptimizationReason::kDoNotOptimize;
+    }
+  ```
+
+  - 이 과정이 어렵다면 자동차를 예시로 생각하면 될듯
+    - V8엔진 (8기통) -> Ignition(점화기=시동거는거) -> Turbo(냉각기=열식혀주는놈)
+
+## 결론
+
+- 마지막으로 전체 자바스크립트 런타임이 동작하는 것은 사진 과 같음
+
+<img
+  src="https://velog.velcdn.com/images%2Fchoijw1116%2Fpost%2Fcec958c0-57ba-48f4-bcc7-a12f9efa1e08%2Fjavascript_runtime.png"
+  width="100%"
+  height="300"
+/>
+
+- 자바스크립트 런타임의 비동기 처리 및 콜 스택 이벤트루프 블로킹 논블로킹에 대해서 포스팅 할 예정
+
+- 자바스크립트는 그렇다면 Interperter 인가? Compiler 인가? 생각 해 보기
+
+[^1]: `웹 어셈블리`란 브라우저에서 실행할 수 있는 이진 형식의 프로그래밍 언어로서 주로 웹 애플리케이션에서 높은 성능이 필요한 부분을 위해 설계되었으며, JavaScript 외에 다양한 언어로 작성된 코드를 효과적으로 실행할 수 있도록 설계 됨
+[^2]: `바이트 코드`란 고급 언어로 작성된 소스 코드를 가상머신이 한결 편하게 이해할 수 있도록 중간 코드로 한번 컴파일하여가상 머신이 이해 할 수 있는 0과 1로 구성된 이진 코드
