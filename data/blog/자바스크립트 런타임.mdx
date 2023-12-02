@@ -1,0 +1,29 @@
+---
+title: 무제
+date: '2023-12-03'
+tags: ['study']
+draft: false
+summary: 무제
+---
+
+![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
+
+### ⚠ 참고 사항
+
+```javascript
+
+import { useState } from "react";
+
+export default function blogPage() {
+ const [블로그 내용, 내가 적은 내용] = useState('나의 주관적 생각 + 잘못 이해한 내용')
+  return (
+    <article>
+      {블로그 내용}
+      // 관련 된 내용을 내가 직접 공부하여 정리한 내용!!
+      // 주관적 생각과 나의 이해를 바탕으로 적은 글이라 정확하지 않을 수 있음
+      // 추후의 내용이 추가 되거나 수정 될 수 있음
+    </article>
+  );
+}
+
+```
