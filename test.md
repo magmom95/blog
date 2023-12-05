@@ -1,9 +1,9 @@
 ---
-title: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹
-date: '2023-12-04'
-tags: ['study']
+title: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리
+date: "2023-12-04"
+tags: ["study"]
 draft: false
-summary: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹를 공부하여 정리한 글 입니다.
+summary: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리를 공부하여 정리한 글 입니다.
 ---
 
 ![header](https://capsule-render.vercel.app/api?type=rect&color=auto&text=%20%20STUDY%20%20&fontAlign=30&fontSize=15&textBg=true&desc=강의%20내용을%20바탕으로%20나의%20경험,생각을%20작성&descAlign=60&descAlignY=50&animation=twinkling)
