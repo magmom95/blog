@@ -1,7 +1,7 @@
 ---
 title: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹
-date: "2024-01-09"
-tags: ["study"]
+date: '2024-01-09'
+tags: ['study']
 draft: false
 summary: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹를 공부하여 정리한 글 입니다.
 ---
@@ -49,7 +49,7 @@ export default function blogPage() {
   width="100%"
   height="300"
 />
-&uarr; [자바스크립트 런타임](https://development-mark.vercel.app/blog/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%97%94%EC%A7%84)
+&uarr; [자바스크립트 런타임](https://development-mark.vercel.app/blog/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%97%94%EC%A7%84
 
 그전 포스팅 이후 자바스크립트 런타임에 대해 보다 자세히 다룰 예정
 
@@ -65,17 +65,53 @@ export default function blogPage() {
 
 - 비동기는 요청과 결과가 동시에 일어나지 않는다를 의미 (Asynchronous: 동시에 일어나지 않는)
 
-- 즉 결과가 주어지는데 시간이 걸리더라도 그 시간 동안 다른 작업을 할 수 있음
+```javascript
+console.log('일을 분배 해야겠다')
+console.log('A: 할당 받았습니다.')
+console.log('B: 할당 받았습니다.')
+console.log('C: 할당 받았습니다.')
+console.log('D: 할당 받았습니다.')
+
+setTimeout(() => {
+  console.log('A: 완료')
+}, 2000)
+
+setTimeout(() => {
+  console.log('B: 완료')
+}, 1000)
+
+setTimeout(() => {
+  console.log('C: 완료')
+}, 1500)
+
+console.log('할당 완료!')
+console.log('D: 완료')
+```
+
+```javascript
+
+비동기를 통한 콘솔 결과 값
+
+일을 분배 해야겠다.
+A: 할당 받았습니다.
+B: 할당 받았습니다.
+C: 할당 받았습니다.
+D: 할당 받았습니다.
+할당 완료!
+D: 완료
+B: 완료
+C: 완료
+A: 완료
+
+```
+
+<img src="public\static\images\비동기.jpg" width="100%" height="300" />
 
 ## 싱글스레드
 
 - 싱글 스레드(single thread = 한 가닥)
 
-  <img
-    src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png"
-    width="100%"
-    height="300"
-  />
+  <img src="https://d2.naver.com/content/images/2015/06/helloworld-59361-1.png" width="100%"height="300"/>
 
   - 바늘 구멍에 실을 꿰는 것 처럼 한 가지 작업을 실행하기 위해 순차적으로 진행 시켜야 함 (실제로 코드를 실처럼 이어 놓았다고 해서 유래된 이름)
 
