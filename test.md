@@ -1,7 +1,7 @@
 ---
 title: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹
-date: "2024-01-09"
-tags: ["study"]
+date: '2024-01-09'
+tags: ['study']
 draft: false
 summary: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹를 공부하여 정리한 글 입니다.
 ---
@@ -68,26 +68,26 @@ export default function blogPage() {
 - 이와 반대로 요청을 보낸 후 해당 요청의 응답을 받아야 다음 동작을 실행
 
 ```javascript
-console.log("일을 분배 해야겠다");
-console.log("A: 할당 받았습니다.");
-console.log("B: 할당 받았습니다.");
-console.log("C: 할당 받았습니다.");
-console.log("D: 할당 받았습니다.");
+console.log('일을 분배 해야겠다')
+console.log('A: 할당 받았습니다.')
+console.log('B: 할당 받았습니다.')
+console.log('C: 할당 받았습니다.')
+console.log('D: 할당 받았습니다.')
 
 setTimeout(() => {
-  console.log("A: 완료");
-}, 2000);
+  console.log('A: 완료')
+}, 2000)
 
 setTimeout(() => {
-  console.log("B: 완료");
-}, 1000);
+  console.log('B: 완료')
+}, 1000)
 
 setTimeout(() => {
-  console.log("C: 완료");
-}, 1500);
+  console.log('C: 완료')
+}, 1500)
 
-console.log("할당 완료!");
-console.log("D: 완료");
+console.log('할당 완료!')
+console.log('D: 완료')
 ```
 
 ```javascript
@@ -137,11 +137,13 @@ A: 완료
 
 ## 논블로킹
 
-- 현재 작업에 대한 결과를 어떻게 다룰것이냐에 따라 블로킹[^1] or 논 블로킹으로 나눔
+- 현재 작업에 대한 결과를 어떻게 다룰것이냐에 따라 블로킹[^1] or 논 블로킹[^2]으로 나눔
 
 - **특정 작업의 완료를 기다리는 동안(block) 프로그램의 제어권이 해당 지점에서 잠시 중단되는 상태를 누가 주체가 될것인지를 의미 함**
 
-###
+### 비동기가 논블로킹인가?
+
+- 비동기 :
 
 ## 싱글스레드
 
@@ -191,4 +193,8 @@ A: 완료
 
 [^1]: `블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리도록 하는것을 의미
 
-<img src="public\static\images\비동기.png" width="100%" height="300" />
+<img src="public\static\images\블로킹.png" width="100%" height="300" />
+
+[^2]: `블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리지 않음
+
+<img src="public\static\images\논블로킹.png" width="100%" height="300" />
