@@ -34,7 +34,7 @@ export default function blogPage() {
 
 [2. 비동기](#비동기)
 
-[3. 논블로킹](#논블로킹)
+[3. 논 블로킹 I/O](#논-블로킹-I/O)
 
 [4. 싱글스레드](#싱글스레드)
 
@@ -59,7 +59,7 @@ export default function blogPage() {
 
 - 종류로는 웹 브라우저(크롬, 파이어폭스) 와 NodeJs라는 프로그램이 존재 함
 
-- 비동기 처리를 하며 싱글 스레드 및 논블로킹 처리 함
+- 비동기 처리를 하며 싱글 스레드 및 논 블로킹 처리 함
 
 ## 비동기
 
@@ -135,24 +135,81 @@ A: 완료
 
 - 의도적으로 시간 지연을 사용하는 기능 ex) 알람, 구글 캘린더
 
-## 논블로킹
+## 논 블로킹 I/O
 
 - 현재 작업에 대한 결과를 어떻게 다룰것이냐에 따라 블로킹[^1] or 논 블로킹[^2]으로 나눔
 
 - **특정 작업의 완료를 기다리는 동안(block) 프로그램의 제어권이 해당 지점에서 잠시 중단되는 상태를 누가 주체가 될것인지를 의미 함**
 
-### 비동기가 논블로킹인가?
+### 비동기? 논 블로킹 I/O?
 
-- 비동기는 어떤 작업이 완료될 때까지 기다리지 않고, 다른 작업을 수행할 수 있는 방식
+```javascript
+// 비동기
+import React, { useState, useEffect } from 'react'
 
-- 논블로킹은 입출력 작업이 완료될 때까지 기다리지 않고, 다른 작업을 수행할 수 있는 방식
+const getData = () => {
+  const [userData, setUserData] = useState(null)
 
-- 비동기는 네트워크 요청(API 호출), 파일 읽기/쓰기,  Promise, 콜백 함수, async/await 등 비동기적인 동작
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // 비동기적으로 API에 데이터를 요청
+        const response = await fetch('https://https://development-mark.vercel.app/user')
+        const userData = await response.json()
+        // 상태 업데이트
+        setUserData(userData)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    // 컴포넌트가 마운트되면 API 요청 수행
+    fetchUserData()
+  }, [])
 
-- 논블로킹은 파일 읽기/쓰기, 네트워크 통신 등이 논블로킹 입출력에 해당
+  return (
+    <div>
+      {userData ? <p>사용자 정보: {JSON.stringify(userData)}</p> : <p>데이터를 불러오는 중...</p>}
+    </div>
+  )
+}
 
+export default getData
+```
 
-#### 파일 읽기/쓰기가
+```javascript
+//논 블로킹 I/O
+import React, { useState, useEffect } from 'react'
+import fs from 'fs/promises' // Node.js의 promise 기반 파일 시스템 모듈
+
+const FileReadExample = () => {
+  const [fileContent, setFileContent] = useState(null)
+
+  useEffect(() => {
+    const readFile = async () => {
+      try {
+        // 비동기적으로 API에 데이터를 요청
+        const content = await fs.readFile('example.txt', 'utf-8')
+        // 상태 업데이트
+        setFileContent(content)
+      } catch (error) {
+        console.error('파일을 읽는 중 에러 발생:', error)
+      }
+    }
+
+    readFile()
+  }, [])
+
+  return <div>{fileContent ? <p>파일 내용: {fileContent}</p> : <p>파일을 읽는 중...</p>}</div>
+}
+
+export default FileReadExample
+```
+
+- 비동기와 논 블록 I/O의 차이점을 파악하기 어려움 따라서 아래와 같이 정리 할 수 있음
+
+<img src="public\static\images\자바스크립트 엔진.png" width="100%" height="300" />
+
+&uarr; 비동기와 논 블록 I/O 차이점
 
 ## 싱글스레드
 
