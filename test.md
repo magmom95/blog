@@ -207,17 +207,66 @@ export default FileReadExample
 
 - 비동기와 논 블록 I/O의 차이점을 파악하기 어려움 따라서 아래와 같이 정리 할 수 있음
 
-<img src="public\static\images\자바스크립트 엔진.png" width="100%" height="300" />
+<img src="public\static\images\차이점.png" width="100%" height="300" />
 
 &uarr; 비동기와 논 블록 I/O 차이점
 
+```javascript
+//논 블로킹 과 비동기 관점에서 바라보기
+
+import React, { useState } from 'react'
+
+const NonBlockingTimerExample = () => {
+  const [message, setMessage] = useState('')
+
+  const startTimer = () => {
+    // 비동기적으로 타이머 설정
+    setTimeout(() => {
+      // 타이머 콜백에서 메시지 업데이트
+      setMessage('타이머 완료!')
+    }, 3000)
+
+    // 다른 작업 수행 (논 블로킹)
+    console.log('타이머 시작')
+  }
+
+  return (
+    <div>
+      <button onClick={startTimer}>타이머 시작 (논블로킹)</button>
+      <p>{message}</p>
+    </div>
+  )
+}
+
+export default NonBlockingTimerExample
+```
+
+- setTimeout(() => { setMessage("타이머 완료!"); }, 3000);: 이 부분은 비동기적으로 동작하는 부분
+
+- console.log("타이머 시작");: 이 부분은 setTimeout 함수 이후에 동기적으로 실행되는 코드
+
+- setTimeout 함수가 호출되면서 타이머가 백그라운드에서 설정되고, 동시에 다음 코드가 실행
+
+- 입출력 작업이 논블로킹인 경우에도 일반적으로 비동기적으로 처리 (거의 혼용으로 사용)
+
+⚠ 파일 입출력이 비동기일 때는 비동기 호출이라고 할 수 있으며, 이러한 경우에는 주로 논블로킹 입출력 I/O 모델을 사용 (시점과 관련된 이론적인 개념이라 애매..함) 대부분 비동기 처리가 이러한 구조
+``
+
+#### 즉 자바스크립트는 비동기적으로 동작하면서 논블로킹(Non-blocking) I/O 모델을 채택
+
 ## 싱글스레드
 
-- 싱글 스레드(single thread = 한 가닥)
+- 자바스크립트는 싱글 스레드(single thread = 한 가닥) 기반 언어
+
+  <img src="public\static\images\싱글 스레드.png" width="100%" height="300" />
 
   - 바늘 구멍에 실을 꿰는 것 처럼 한 가지 작업을 실행하기 위해 순차적으로 진행 시켜야 함 (실제로 코드를 실처럼 이어 놓았다고 해서 유래된 이름)
 
-  - 싱글 스레드란 하나의 프로그램에서 동시에 하나의 코드만 실행할 수 있다는 뜻
+#### 싱글스레드인데 비동기 처리를 어떻게 할까?
+
+- 싱글스레드는 한가지 일밖에 못하지만 기본적인 비동기 처리는 동시에 일을 처리 하기때문에 자바스크립트는 이 두가지 성질을 갖는것이 개념적으로는 불가능 함
+
+🚩 **V8엔진으로 인해 싱글스레드지만 비동기처리가 가능 하게 됨**
 
 #### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
 
@@ -255,6 +304,8 @@ export default FileReadExample
 
 <img src="public\static\images\블로킹.png" width="100%" height="300" />
 
-[^2]: `블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리지 않음
+[^2]: `논 블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리지 않음
 
 <img src="public\static\images\논블로킹.png" width="100%" height="300" />
+
+[^3]: `스레드`란 하나의 프로세스 안에서 작업을 담당하는 최소 실행 단위 ex) 크롬 브라우저(=프로세스)에서 유투브 음악듣기(스레드1), 코딩 짜기(스레드2)
