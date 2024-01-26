@@ -269,7 +269,7 @@ export default NonBlockingTimerExample
 
 #### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
 
-<img src="public\static\images\자바스크립트 엔진.png" width="100%" height="300" />
+<img src="public\static\images\비동기 처리 방법.png" width="100%" height="300" />
 
 - **콜 스택** : 코드 실행에 따라 호출 스택이 쌓이는 곳. 자바스크립트 엔진은 단 하나의 호출 스택을 사용
 
