@@ -44,14 +44,7 @@ export default function blogPage() {
 
 ## 개요
 
-<img
-  src="https://velog.velcdn.com/images%2Fchoijw1116%2Fpost%2Fcec958c0-57ba-48f4-bcc7-a12f9efa1e08%2Fjavascript_runtime.png"
-  width="100%"
-  height="300"
-/>
-&uarr; [자바스크립트 런타임](https://development-mark.vercel.app/blog/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%97%94%EC%A7%84
-
-그전 포스팅 이후 자바스크립트 런타임에 대해 보다 자세히 다룰 예정
+자바스크립트 런타임에 대한 추가적인 내용 및 개념에 대하여 자세히 다룰 예정
 
 ## 자바스크립트 런타임 (V8)
 
@@ -270,6 +263,8 @@ export default NonBlockingTimerExample
 #### 콜 스택(Call Stack)과 메모리 힙(Memory Heap)
 
 <img src="public\static\images\비동기 처리 방법.png" width="100%" height="300" />
+
+&uarr; [자바스크립트 런타임](https://development-mark.vercel.app/blog/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%97%94%EC%A7%84)
 
 - **콜 스택** : 코드 실행에 따라 호출 스택이 쌓이는 곳. 자바스크립트 엔진은 단 하나의 호출 스택을 사용
 
