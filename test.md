@@ -1,7 +1,7 @@
 ---
 title: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹
-date: '2024-01-25'
-tags: ['study']
+date: "2024-01-25"
+tags: ["study"]
 draft: false
 summary: 자바스크립트 엔진 런타임 비동기 작동 방식, 동작 원리 및 블로킹를 공부하여 정리한 글 입니다.
 ---
@@ -61,26 +61,26 @@ export default function blogPage() {
 - 이와 반대로 요청을 보낸 후 해당 요청의 응답을 받아야 다음 동작을 실행
 
 ```javascript
-console.log('일을 분배 해야겠다')
-console.log('A: 할당 받았습니다.')
-console.log('B: 할당 받았습니다.')
-console.log('C: 할당 받았습니다.')
-console.log('D: 할당 받았습니다.')
+console.log("일을 분배 해야겠다");
+console.log("A: 할당 받았습니다.");
+console.log("B: 할당 받았습니다.");
+console.log("C: 할당 받았습니다.");
+console.log("D: 할당 받았습니다.");
 
 setTimeout(() => {
-  console.log('A: 완료')
-}, 2000)
+  console.log("A: 완료");
+}, 2000);
 
 setTimeout(() => {
-  console.log('B: 완료')
-}, 1000)
+  console.log("B: 완료");
+}, 1000);
 
 setTimeout(() => {
-  console.log('C: 완료')
-}, 1500)
+  console.log("C: 완료");
+}, 1500);
 
-console.log('할당 완료!')
-console.log('D: 완료')
+console.log("할당 완료!");
+console.log("D: 완료");
 ```
 
 ```javascript
@@ -138,64 +138,74 @@ A: 완료
 
 ```javascript
 // 비동기
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 
 const getData = () => {
-  const [userData, setUserData] = useState(null)
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         // 비동기적으로 API에 데이터를 요청
-        const response = await fetch('https://https://development-mark.vercel.app/user')
-        const userData = await response.json()
+        const response = await fetch(
+          "https://https://development-mark.vercel.app/user"
+        );
+        const userData = await response.json();
         // 상태 업데이트
-        setUserData(userData)
+        setUserData(userData);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
+    };
     // 컴포넌트가 마운트되면 API 요청 수행
-    fetchUserData()
-  }, [])
+    fetchUserData();
+  }, []);
 
   return (
     <div>
-      {userData ? <p>사용자 정보: {JSON.stringify(userData)}</p> : <p>데이터를 불러오는 중...</p>}
+      {userData ? (
+        <p>사용자 정보: {JSON.stringify(userData)}</p>
+      ) : (
+        <p>데이터를 불러오는 중...</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default getData
+export default getData;
 ```
 
 ```javascript
 //논 블로킹 I/O
-import React, { useState, useEffect } from 'react'
-import fs from 'fs/promises' // Node.js의 promise 기반 파일 시스템 모듈
+import React, { useState, useEffect } from "react";
+import fs from "fs/promises"; // Node.js의 promise 기반 파일 시스템 모듈
 
 const FileReadExample = () => {
-  const [fileContent, setFileContent] = useState(null)
+  const [fileContent, setFileContent] = useState(null);
 
   useEffect(() => {
     const readFile = async () => {
       try {
         // 비동기적으로 API에 데이터를 요청
-        const content = await fs.readFile('example.txt', 'utf-8')
+        const content = await fs.readFile("example.txt", "utf-8");
         // 상태 업데이트
-        setFileContent(content)
+        setFileContent(content);
       } catch (error) {
-        console.error('파일을 읽는 중 에러 발생:', error)
+        console.error("파일을 읽는 중 에러 발생:", error);
       }
-    }
+    };
 
-    readFile()
-  }, [])
+    readFile();
+  }, []);
 
-  return <div>{fileContent ? <p>파일 내용: {fileContent}</p> : <p>파일을 읽는 중...</p>}</div>
-}
+  return (
+    <div>
+      {fileContent ? <p>파일 내용: {fileContent}</p> : <p>파일을 읽는 중...</p>}
+    </div>
+  );
+};
 
-export default FileReadExample
+export default FileReadExample;
 ```
 
 - 비동기와 논 블록 I/O의 차이점을 파악하기 어려움 따라서 아래와 같이 정리 할 수 있음
@@ -207,31 +217,31 @@ export default FileReadExample
 ```javascript
 //논 블로킹 과 비동기 관점에서 바라보기
 
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 const NonBlockingTimerExample = () => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("");
 
   const startTimer = () => {
     // 비동기적으로 타이머 설정
     setTimeout(() => {
       // 타이머 콜백에서 메시지 업데이트
-      setMessage('타이머 완료!')
-    }, 3000)
+      setMessage("타이머 완료!");
+    }, 3000);
 
     // 다른 작업 수행 (논 블로킹)
-    console.log('타이머 시작')
-  }
+    console.log("타이머 시작");
+  };
 
   return (
     <div>
       <button onClick={startTimer}>타이머 시작 (논블로킹)</button>
       <p>{message}</p>
     </div>
-  )
-}
+  );
+};
 
-export default NonBlockingTimerExample
+export default NonBlockingTimerExample;
 ```
 
 - setTimeout(() => { setMessage("타이머 완료!"); }, 3000);: 이 부분은 비동기적으로 동작하는 부분
