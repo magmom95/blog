@@ -362,8 +362,12 @@ export default NonBlockingTimerExample;
 
   - 메모리 힙은 객체와 변수가 할당되는 공간이며 비동기 작업에서 필요한 값이나 콜백 함수도 메모리 힙에 저장
 
+<img src="https://simonzhlx.github.io/images/async-code-exe.gif" width="100%" height="300" />
+
+&uarr; [자바스크립트 런타임 비동기 처리 방법](https://simonzhlx.github.io/js-engine/)
+
 <details markdown="1">
-<summary>🔁 자바스크립트 비동기 처리 예시 </summary>
+<summary>🔁 자바스크립트 비동기 처리 예시 </summary>  
 <br>
 
 ```javascript
@@ -415,7 +419,17 @@ console.log("End");
 
 </details>
 
-✨자바스크립트는 기본적으로 싱글 스레드로 동작하지만, 이벤트 루프를 통해 비동기 작업을 효과적으로 처리
+✨ 자바스크립트는 기본적으로 싱글 스레드로 동작하지만, 이벤트 루프를 통해 비동기 작업을 효과적으로 처리할 수 있음 즉
+**이벤트 루프는 하나의 스레드에서 콜 스택을 처리하면서 동시에 비동기 작업을 관리하여 멀티스레드처럼 동작하는 것처럼 보이게 만듭**
+
+<details markdown="1">
+<summary>🔄 마이크로태스크 큐 비동기 처리 예시 </summary>
+<br>
+<img src="https://res.cloudinary.com/practicaldev/image/fetch/s--us8FF30N--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/6wxjxduh62fqt531e2rc.gif" width="100%" height="300" />
+
+&uarr; [마이크로태스크 큐 비동기 처리](https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke#syntax)
+
+</details>
 
 [^1]: `블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리도록 하는것을 의미
 
