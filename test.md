@@ -346,9 +346,7 @@ export default NonBlockingTimerExample;
 
   - 타이머 함수(setTimeout), 이벤트 핸들러, HTTP 요청 등과 같은 비동기 작업이 완료되면 해당 작업에 등록된 콜백 함수를 콜백 큐에 추가하여 이후 콜 스택이 비어질 때까지 기다렸다가 콜백을 콜 스택에 추가
 
-  - 콜백 큐와 함께 마이크로태스크 큐도 존재하는데, Promise와 관련된 콜백이 이곳에 저장 마이크로태스크 큐의 우선순위가 더 높아 비동기 작업 중 Promise 콜백은 콜백 큐보다 먼저 실행
-
-#### 📌 자바스크립트 런타임에서 비동기 처리 방법
+## 자바스크립트 런타임
 
 - **자바스크립트 런타임에서 비동기 처리는 이벤트 루프를 중심으로 이루어 짐**
 
@@ -419,15 +417,89 @@ console.log("End");
 
 </details>
 
-✨ 자바스크립트는 기본적으로 싱글 스레드로 동작하지만, 이벤트 루프를 통해 비동기 작업을 효과적으로 처리할 수 있음 즉
-**이벤트 루프는 하나의 스레드에서 콜 스택을 처리하면서 동시에 비동기 작업을 관리하여 멀티스레드처럼 동작하는 것처럼 보이게 만듭**
+✨ 자바스크립트는 기본적으로 싱글 스레드로 동작하지만, 이벤트 루프를 통해 비동기 작업을 효과적으로 처리할 수 있음
+
+✨ **이벤트 루프는 하나의 스레드에서 콜 스택을 처리하면서 동시에 비동기 작업을 관리하여 멀티스레드처럼 동작하는 것처럼 보이게 만듭**
+
+#### "매크로태스크 큐(Macro Task Queue)"와 "마이크로태스크 큐(Microtask Queue)"
+
+- 실제론 태스크큐 (콜백 큐)는 "매크로태스크 큐(Macro Task Queue)"와 "마이크로태스크 큐(Microtask Queue)"로 나뉨
+
+- 매크로태스크 큐(Macro Task Queue)
+
+  - 주로 일반적인 비동기 작업들이 해당 큐에 추가 됨 ex) 이벤트 핸들러, HTTP 요청,
+
+  - 이벤트 루프에서 콜 스택이 완전히 비워질 때마다 처리
+
+- 마이크로태스크 큐(Microtask Queue)
+
+  - 주로 Promise와 관련된 작업들이나 Async/Await을 사용한 작업들이 해당 큐에 추가 됨 ex) Promise가 resolve 또는 reject 되었을 때의 콜백 함수 등
+
+  - 마이크로태스크 큐의 작업들은 매크로태스크 큐의 작업보다 더 높은 우선순위를 갖으며 콜 스택이 비어있을 때마다 먼저 실행 즉 우선순위가 높아 먼저 실행  
+
+<img src="public\static\images\마이크로태스크 큐.gif" width="100%" height="300" />  
+
+&uarr; [마이크로태스크 큐](https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke#syntax)
 
 <details markdown="1">
 <summary>🔄 마이크로태스크 큐 비동기 처리 예시 </summary>
 <br>
-<img src="https://res.cloudinary.com/practicaldev/image/fetch/s--us8FF30N--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/6wxjxduh62fqt531e2rc.gif" width="100%" height="300" />
 
-&uarr; [마이크로태스크 큐 비동기 처리](https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke#syntax)
+```javascript
+// 콘솔에 "Start"를 출력
+console.log("Start");
+
+const promiseExample = () => {
+  return new Promise((resolve, reject) => {
+    console.log("Promise started");
+    // promise started 출력
+    // 2초 후에 Promise가 resolve 됨.
+    setTimeout(() => {
+      resolve("Promise resolved!");
+    }, 2000);
+  });
+};
+
+// Promise를 이용한 비동기 처리
+promiseExample()
+  .then((result) => {
+    console.log(result); // Promise가 resolve된 결과 출력
+    console.log("마이크로태스크큐!"); // 마이크로태스크 큐에서 실행되는 작업 출력
+  })
+  .catch((error) => {
+    console.error(error); // Promise에서 발생한 에러 처리
+  })
+  .finally(() => {
+    console.log("무조건 출력"); // Promise가 성공하든 실패하든 마지막에 실행 됨 (finally 여서)
+  });
+
+// 콘솔에 "End"를 출력
+console.log("End");
+```
+
+- console.log("Start")가 실행되고, promiseExample 함수가 호출
+
+- promiseExample 함수 내에서 Promise가 생성되고, 해당 Promise는 2초 뒤에 resolve되도록 설정
+
+- promiseExample()이 호출되면서 Promise가 생성되고, 해당 Promise는 마이크로태스크 큐에 등록
+
+- 콜 스택이 비어지면 이벤트 루프가 마이크로태스크 큐를 확인하고, Promise의 콜백 함수가 콜 스택에 올라가 실행
+
+- then 블록이 실행되어 Promise가 resolve된 결과 및 "마이크로태스크큐!"를 출력
+
+- catch 블록과 finally 블록은 마이크로태스크 큐에 등록되지 않으므로 현재 단계에서 실행되지 않음
+
+- 마이크로태스크 큐의 작업이 완료되면 이벤트 루프가 메크로 큐를 확인하고, 메크로 큐에 등록된 작업들이 콜 스택에 올라가 실행
+
+- console.log("End")가 출력되고 프로그램이 종료
+
+<img src="public\static\images\과정1.gif" width="100%" height="300" />
+
+<img src="public\static\images\과정2.gif" width="100%" height="300" />
+
+<img src="public\static\images\과정3.gif" width="100%" height="300" />
+
+&uarr; [마이크로태스크 큐 비동기 처리 예시](https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke#syntax)
 
 </details>
 
@@ -437,7 +509,7 @@ console.log("End");
 
 [^2]: `논 블로킹`란 요청에 대한 결과를 바로 줄 수 없는 경우 그 결과를 기다리지 않음
 
-<img src="public\static\images\논블로킹.png" width="100%" height="300" />
+<img src="public\static\images\논 블로킹.png" width="100%" height="300" />
 
 [^3]: `스레드`란 하나의 프로세스 안에서 작업을 담당하는 최소 실행 단위 ex) 크롬 브라우저(=프로세스)에서 유투브 음악듣기(스레드1), 코딩 짜기(스레드2)
 [^4]: `경쟁 조건`란 여러 스레드가 동시에 하나의 자원에 접근하여 값을 변경하려고 할 때, 어떤 스레드가 먼저 자원에 접근하여 변경할지 확실하지 않은 상태. 이로 인해 예측할 수 없는 결과가 발생할 수 있음
