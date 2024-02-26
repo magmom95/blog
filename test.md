@@ -34,19 +34,13 @@ export default function blogPage() {
 
 [2. 비동기](#비동기)
 
-[3. 논 블로킹 I/O](#논-블로킹-I/O)
-
-[4. 싱글 스레드](#싱글-스레드)
-
-[5. 자바스크립트 런타임](#자바스크립트-런타임)
-
 [6. 결론](#결론)
 
 ## 개요
 
 Promise, Async/Await의 사용법, 그리고 Axios를 통한 API 호출과 응답 처리에 대한 모범 사례에 대한 내용 과 개념을 정리 함
 
-## 하이
+## 비동기
 
 <img src="public\static\images\마이크로태스크 큐.gif" width="100%" height="300" />
 
