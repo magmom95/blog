@@ -42,6 +42,10 @@ Promise, Async/Await의 사용법, 그리고 Axios를 통한 API 호출과 응�
 
 ## 비동기
 
+- 비동기는 요청과 결과가 동시에 일어나지 않는다를 의미 (Asynchronous: 동시에 일어나지 않는)
+
+- **작업이 독립적으로 실행되며, 완료를 기다리지 않고 다음 작업으로 진행되는 프로그래밍 패턴**
+
 <img src="public\static\images\마이크로태스크 큐.gif" width="100%" height="300" />
 
 &uarr; [마이크로태스크 큐](https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke#syntax)
