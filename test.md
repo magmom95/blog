@@ -34,6 +34,12 @@ export default function blogPage() {
 
 [2. 비동기](#비동기)
 
+[3. Promise](#Promise)
+
+[4. Async/Await](#Async/Await)
+
+[5. Axios](#Axios)
+
 [6. 결론](#결론)
 
 ## 개요
